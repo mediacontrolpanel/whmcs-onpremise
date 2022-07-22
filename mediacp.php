@@ -103,7 +103,7 @@
                 "Type" => "dropdown",
                 "Size" => "28",
                 "Description" => "<br />Only applies to Wowza Streaming Engine services.",
-                "Options" => ",Live Streaming,Live Streaming Low Latency,Ondemand Streaming,TV Station,Shoutcast,Stream Relay",
+                "Options" => ",Live Streaming,Live Streaming Low Latency,Ondemand Streaming,TV Station,Shoutcast,Live Camera Restream",
                 "Default" => "",
                 'SimpleMode' => true,
             ),
@@ -819,7 +819,7 @@
 				case 'Icecast 2':
 					$args['plugin'] = 'icecast';
                     $args['customfields']['source_password'] = $args['password'];
-                    $args['password'] = mediacp_generatePassword();
+                    unset($args['password']);
                     unset($args['adminpassword']);
 				break;
 
@@ -827,7 +827,7 @@
 				case 'Icecast 2 KH':
 					$args['plugin'] = 'icecast_kh';
                     $args['customfields']['source_password'] = $args['password'];
-                    $args['password'] = mediacp_generatePassword();
+                    unset($args['password']);
                     unset($args['adminpassword']);
 				break;
 
@@ -1033,7 +1033,7 @@
 					$args['customfields']['servicetype'] != 'TV Station' &&
 					$args['customfields']['servicetype'] != 'Ondemand Streaming' &&
 					$args['customfields']['servicetype'] != 'Shoutcast' &&
-					$args['customfields']['servicetype'] != 'Stream Relay'
+					$args['customfields']['servicetype'] != 'Live Camera Restream'
 				){
 				$args['customfields']['servicetype'] = 'Live Streaming';
 			}
@@ -1394,15 +1394,11 @@
             );
             $return = mediacp_api( $api, $params );
 
-            if ( @$return['status'] == 'failed' && strpos(@$return['error'],'requested method admin.service_list does not exist') !== FALSE ){
+            if ( @$return['status'] == 'failed' && strpos(@$return['error'],'requested method admin.service_list does not exist') !== -1 ){
                 return [
                     'success'  => false, // Boolean value
                     'error' => "Not supported with your version of MediaCP. Please upgrade MediaCP to version 2.9.11, 2.10.7 or newer.",
                 ];
-            }
-
-            if ( isset($return['status']) && isset($return['error']) ){
-                return ['success'=>false,'error'=>$return['error']];
             }
 
             if ( @$return['status'] !== 'success' ){

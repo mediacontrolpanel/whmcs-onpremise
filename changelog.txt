@@ -14,12 +14,6 @@ https://www.mediacp.net/documentation/whmcs-integration-guide/
 #######################################################
 CHANGELOG
 #######################################################
-2022-06-03
- - Wowza IP Camera Relay renamed to "Stream Relay"
- - Automatically delete mediacp user account if no other services active
- - Improved error message if WHMCS Access Hash is empty
- - Fixed: Icecast services provisioned through WHMCS missing admin password
-
 2022-01-03
  - Added "Stream Proxy" configurable option
 
