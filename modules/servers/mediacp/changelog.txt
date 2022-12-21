@@ -14,6 +14,9 @@ https://www.mediacp.net/documentation/whmcs-integration-guide/
 #######################################################
 CHANGELOG
 #######################################################
+2022-12-21
+ - PHP 8.1 Compatibility
+
 2022-01-03
  - Added "Stream Proxy" configurable option
 

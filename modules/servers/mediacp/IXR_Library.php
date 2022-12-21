@@ -44,7 +44,7 @@ class IXR_Value
     var $data;
     var $type;
 
-    function IXR_Value($data, $type = false)
+    function __construct($data, $type = false)
     {
         $this->data = $data;
         if (!$type) {
@@ -188,7 +188,7 @@ class IXR_Message
     // The XML parser
     var $_parser;
 
-    function IXR_Message($message)
+    function __construct($message)
     {
         $this->message =& $message;
     }
@@ -243,7 +243,7 @@ class IXR_Message
             case 'fault':
                 $this->messageType = $tag;
                 break;
-                /* Deal with stacks of arrays and structs */
+            /* Deal with stacks of arrays and structs */
             case 'data':    // data is to all intents and puposes more interesting than array
                 $this->_arraystructstypes[] = 'array';
                 $this->_arraystructs[] = array();
@@ -296,7 +296,7 @@ class IXR_Message
                 $value = base64_decode($this->_currentTagContents);
                 $valueFlag = true;
                 break;
-                /* Deal with stacks of arrays and structs */
+            /* Deal with stacks of arrays and structs */
             case 'data':
             case 'struct':
                 $value = array_pop($this->_arraystructs);
@@ -346,7 +346,7 @@ class IXR_Server
     var $message;
     var $capabilities;
 
-    function IXR_Server($callbacks = false, $data = false, $wait = false)
+    function __construct($callbacks = false, $data = false, $wait = false)
     {
         $this->setCapabilities();
         if ($callbacks) {
@@ -362,7 +362,7 @@ class IXR_Server
     {
         if (!$data) {
             if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
-            	header('Content-Type: text/plain'); // merged from WP #9093
+                header('Content-Type: text/plain'); // merged from WP #9093
                 die('XML-RPC server accepts POST requests only.');
             }
 
@@ -405,8 +405,8 @@ class IXR_Server
 </methodResponse>
 
 EOD;
-      // Send it
-      $this->output($xml);
+        // Send it
+        $this->output($xml);
     }
 
     function call($methodname, $args)
@@ -481,15 +481,15 @@ EOD;
             'xmlrpc' => array(
                 'specUrl' => 'http://www.xmlrpc.com/spec',
                 'specVersion' => 1
-        ),
+            ),
             'faults_interop' => array(
                 'specUrl' => 'http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php',
                 'specVersion' => 20010516
-        ),
+            ),
             'system.multicall' => array(
                 'specUrl' => 'http://www.xmlrpc.com/discuss/msgReader$1208',
                 'specVersion' => 1
-        ),
+            ),
         );
     }
 
@@ -549,7 +549,7 @@ class IXR_Request
     var $args;
     var $xml;
 
-    function IXR_Request($method, $args)
+    function __construct($method, $args)
     {
         $this->method = $method;
         $this->args = $args;
@@ -601,7 +601,7 @@ class IXR_Client
     // Storage place for an error message
     var $error = false;
 
-    function IXR_Client($server, $path = false, $port = 80, $timeout = 15)
+    function __construct($server, $path = false, $port = 80, $timeout = 15)
     {
         if (!$path) {
             // Assume we have been given a URL instead
@@ -679,11 +679,11 @@ class IXR_Client
                 $gettingHeaders = false;
             }
             if (!$gettingHeaders) {
-            	// merged from WP #12559 - remove trim
+                // merged from WP #12559 - remove trim
                 $contents .= $line;
             }
             if ($this->debug) {
-            	$debugContents .= $line;
+                $debugContents .= $line;
             }
         }
         if ($this->debug) {
@@ -742,7 +742,7 @@ class IXR_Error
     var $code;
     var $message;
 
-    function IXR_Error($code, $message)
+    function __construct($code, $message)
     {
         $this->code = $code;
         $this->message = htmlspecialchars($message);
@@ -788,7 +788,7 @@ class IXR_Date {
     var $second;
     var $timezone;
 
-    function IXR_Date($time)
+    function __construct($time)
     {
         // $time can be a PHP timestamp or an ISO one
         if (is_numeric($time)) {
@@ -846,7 +846,7 @@ class IXR_Base64
 {
     var $data;
 
-    function IXR_Base64($data)
+    function __construct($data)
     {
         $this->data = $data;
     }
@@ -868,7 +868,7 @@ class IXR_IntrospectionServer extends IXR_Server
     var $signatures;
     var $help;
 
-    function IXR_IntrospectionServer()
+    function __construct()
     {
         $this->setCallbacks();
         $this->setCapabilities();
@@ -1030,7 +1030,7 @@ class IXR_ClientMulticall extends IXR_Client
 {
     var $calls = array();
 
-    function IXR_ClientMulticall($server, $path = false, $port = 80)
+    function __construct($server, $path = false, $port = 80)
     {
         parent::IXR_Client($server, $path, $port);
         $this->useragent = 'The Incutio XML-RPC PHP Library (multicall client)';
@@ -1101,9 +1101,9 @@ class IXR_ClientSSL extends IXR_Client
      * @param string $server URL of the Server to connect to
      * @since 0.1.0
      */
-    function IXR_ClientSSL($server, $path = false, $port = 443, $timeout = false)
+    function __construct($server, $path = false, $port = 443, $timeout = false)
     {
-        parent::IXR_Client($server, $path, $port, $timeout);
+        parent::__construct($server, $path, $port, $timeout);
         $this->useragent = 'The Incutio XML-RPC PHP Library for SSL';
 
         // Set class fields
@@ -1207,8 +1207,8 @@ class IXR_ClientSSL extends IXR_Client
         curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
         curl_setopt($curl, CURLOPT_PORT, $this->port);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                                    "Content-Type: text/xml",
-                                    "Content-length: {$length}"));
+            "Content-Type: text/xml",
+            "Content-length: {$length}"));
 
         // Process the SSL certificates, etc. to use
         if (!($this->_certFile === false)) {
@@ -1236,24 +1236,24 @@ class IXR_ClientSSL extends IXR_Client
         }
 
         // Call cURL to do it's stuff and return us the content
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         $contents = curl_exec($curl);
-	    $curlerrno = curl_errno($curl);
-	    $curlerror = curl_error($curl);
+        $curlerrno = curl_errno($curl);
+        $curlerror = curl_error($curl);
         curl_close($curl);
 
         // Check for 200 Code in $contents
         if (!strstr($contents, '200 OK')) {
             //There was no "200 OK" returned - we failed
 
-	        if ( $curlerrno === 0 ){
-	        	$this->error = new IXR_Error(-32300, "Request failed - Ensure firewall outgoing port {$this->port} is opened" . (!filter_var($this->server, FILTER_VALIDATE_IP)?" and ensure domain '{$this->server}' can be resolved.":"."));
-	        	return false;
-	        }
-	        if ( $curlerrno === 7 ){
-	        	$this->error = new IXR_Error(-32300, "Request failed - HTTP status code {$curlerrno} - {$curlerror}.\nEnsure firewall outgoing port {$this->port} is opened.");
-	        	return false;
-	        }
+            if ( $curlerrno === 0 ){
+                $this->error = new IXR_Error(-32300, "Request failed - Ensure firewall outgoing port {$this->port} is opened" . (!filter_var($this->server, FILTER_VALIDATE_IP)?" and ensure domain '{$this->server}' can be resolved.":"."));
+                return false;
+            }
+            if ( $curlerrno === 7 ){
+                $this->error = new IXR_Error(-32300, "Request failed - HTTP status code {$curlerrno} - {$curlerror}.\nEnsure firewall outgoing port {$this->port} is opened.");
+                return false;
+            }
 
             $this->error = new IXR_Error(-32300, 'Request failed - HTTP status code '. $curlerrno . ' - ' . $curlerror);
             return false;
@@ -1304,7 +1304,7 @@ class IXR_ClassServer extends IXR_Server
     var $_objects;
     var $_delim;
 
-    function IXR_ClassServer($delim = '.', $wait = false)
+    function __construct($delim = '.', $wait = false)
     {
         $this->IXR_Server(array(), false, $wait);
         $this->_delimiter = $delim;
