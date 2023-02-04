@@ -102,7 +102,7 @@
                 "FriendlyName" => "Video Service Type",
                 "Type" => "dropdown",
                 "Size" => "28",
-                "Description" => "<br />Only applies to Wowza Streaming Engine services.",
+                "Description" => "<br />Only applies to Video Streaming services.",
                 "Options" => ",Live Streaming,Live Streaming Low Latency,Ondemand Streaming,TV Station,Shoutcast,Live Camera Restream",
                 "Default" => "",
                 'SimpleMode' => true,
