@@ -1048,6 +1048,7 @@
 			if ( 	$args['plugin'] == 'NginxRtmp' &&
 					isset($args['customfields']['servicetype']) &&
 					$args['customfields']['servicetype'] != 'Live Streaming' &&
+			    		$args['customfields']['servicetype'] != 'TV Station' &&
 					$args['customfields']['servicetype'] != 'Relay'
 				){
 				$args['customfields']['servicetype'] = 'Live Streaming';
