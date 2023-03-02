@@ -819,7 +819,7 @@
 				case 'Icecast 2':
 					$args['plugin'] = 'icecast';
                     $args['customfields']['source_password'] = $args['password'];
-                    unset($args['password']);
+                    $args['password'] = mediacp_generatePassword();
                     unset($args['adminpassword']);
 				break;
 
@@ -827,7 +827,7 @@
 				case 'Icecast 2 KH':
 					$args['plugin'] = 'icecast_kh';
                     $args['customfields']['source_password'] = $args['password'];
-                    unset($args['password']);
+                    $args['password'] = mediacp_generatePassword();
                     unset($args['adminpassword']);
 				break;
 
@@ -1033,7 +1033,7 @@
 					$args['customfields']['servicetype'] != 'TV Station' &&
 					$args['customfields']['servicetype'] != 'Ondemand Streaming' &&
 					$args['customfields']['servicetype'] != 'Shoutcast' &&
-					$args['customfields']['servicetype'] != 'Live Camera Restream'
+					$args['customfields']['servicetype'] != 'Stream Relay'
 				){
 				$args['customfields']['servicetype'] = 'Live Streaming';
 			}
@@ -1097,6 +1097,9 @@
 			if ( isset($configoptions['Youtube Publishing']) && strtolower($configoptions['Youtube Publishing'])=='yes'||$configoptions['Youtube Publishing']==1 )		$streamTargets[] = 'Youtube';
 			if ( isset($configoptions['RTMP Publishing']) && strtolower($configoptions['RTMP Publishing'])=='yes'||$configoptions['RTMP Publishing']==1 )		$streamTargets[] = 'RTMP';
 			if ( count($streamTargets) > 0 ) $args['customfields']['streamtargets'] = $streamTargets;
+
+            if ( isset($configoptions['Stream Targets']) )			$args['customfields']['stream_targets_limit'] = (int) $configoptions['Stream Targets'];
+            if ( isset($configoptions['# Stream Targets']) )			$args['customfields']['stream_targets_limit'] = (int) $configoptions['# Stream Targets'];
 
 			/*
 			 * Stream Proxy
@@ -1395,11 +1398,15 @@
             );
             $return = mediacp_api( $api, $params );
 
-            if ( @$return['status'] == 'failed' && strpos(@$return['error'],'requested method admin.service_list does not exist') !== -1 ){
+            if ( @$return['status'] == 'failed' && strpos(@$return['error'],'requested method admin.service_list does not exist') !== FALSE ){
                 return [
                     'success'  => false, // Boolean value
                     'error' => "Not supported with your version of MediaCP. Please upgrade MediaCP to version 2.9.11, 2.10.7 or newer.",
                 ];
+            }
+
+            if ( isset($return['status']) && isset($return['error']) ){
+                return ['success'=>false,'error'=>$return['error']];
             }
 
             if ( @$return['status'] !== 'success' ){
