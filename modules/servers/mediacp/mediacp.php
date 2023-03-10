@@ -251,8 +251,8 @@
             $api['args']['customfields']['source_password'] = $password;
         }
 
-		# Wowza Service Type
-		if ( $Config['serviceplugin'] == 'Wowza Streaming Engine' || $Config['serviceplugin'] == 'Flussonic' ){
+		# Video Service Type
+		if ( $Config['serviceplugin'] == 'Wowza Streaming Engine' || $Config['serviceplugin'] == 'Flussonic' || $Config['serviceplugin'] == 'NginxRtmp' ){
 			$api['args']['customfields']['servicetype'] = $Config['servicetype'];
 		}
 
