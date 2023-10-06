@@ -1,11 +1,11 @@
 <?php
-    use Illuminate\Database\Capsule\Manager as Capsule;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
 
-	/** Ensure XMLRPC class is not already included **/
-	if ( !class_exists("IXR_Value") ){
-		include_once('IXR_Library.php');
-	}
+/** Ensure XMLRPC class is not already included **/
+if ( !class_exists("IXR_Value") ){
+	include_once('IXR_Library.php');
+}
 
 
 	/**
@@ -27,11 +27,11 @@
 			'DefaultNonSSLPort' => '2020', // Default Non-SSL Connection Port
 			'DefaultSSLPort' => '2020', // Default SSL Connection Port
             // The display name of the unique identifier to be displayed on the table output
-            'ListAccountsUniqueIdentifierDisplayName' => 'Domain',
+			'ListAccountsUniqueIdentifierDisplayName' => 'Domain',
             // The field in the return that matches the unique identifier
-            'ListAccountsUniqueIdentifierField' => 'domain',
+			'ListAccountsUniqueIdentifierField' => 'domain',
             // The config option indexed field from the _ConfigOptions function that identifies the product on the remote system
-            'ListAccountsProductField' => 'configoption1',
+			'ListAccountsProductField' => 'configoption1',
 		);
 	}
 
@@ -39,90 +39,90 @@
 
 		mediacp_DetectUpgradeDatabase();
 
-        $configarray = array(
-            "serviceplugin" => array(
-                "FriendlyName" => "Media Service",
-                "Type" => "dropdown",
-                "Size" => "28",
-                "Options" => "Shoutcast 2,Shoutcast 198,Icecast 2,Icecast 2 KH,Wowza Streaming Engine,Flussonic,NginxRtmp,Audio Transcoder",
-                "Description" => "",
-                "Default" => "Shoutcast 2",
-                'SimpleMode' => true,
+		$configarray = array(
+			"serviceplugin" => array(
+				"FriendlyName" => "Media Service",
+				"Type" => "dropdown",
+				"Size" => "28",
+				"Options" => "Shoutcast 2,Shoutcast 198,Icecast 2,Icecast 2 KH,Wowza Streaming Engine,Flussonic,NginxRtmp,Audio Transcoder",
+				"Description" => "",
+				"Default" => "Shoutcast 2",
+				'SimpleMode' => true,
 
-            ),
+			),
 
-            "sourceplugin" => array(
-                "FriendlyName" => "Audio AutoDJ Type",
-                "Type" => "dropdown",
-                "Size" => "28",
-                "Options" => "No Source,Liquidsoap,Shoutcast Transcoder V1,Shoutcast Transcoder V2,Ices 0.4 (MP3),Ices 2.0 (OGG),Stream Transcoder V3",
-                "Description" => "(Audio Services Only - AutoDJ)",
-                "Default" => "No Source",
-                'SimpleMode' => true,
+			"sourceplugin" => array(
+				"FriendlyName" => "Audio AutoDJ Type",
+				"Type" => "dropdown",
+				"Size" => "28",
+				"Options" => "No Source,Liquidsoap,Shoutcast Transcoder V1,Shoutcast Transcoder V2,Ices 0.4 (MP3),Ices 2.0 (OGG),Stream Transcoder V3",
+				"Description" => "(Audio Services Only - AutoDJ)",
+				"Default" => "No Source",
+				'SimpleMode' => true,
 
-            ),
+			),
 
-            "connections" => array(
-                "FriendlyName" => "Limit Connections",
-                "Type" => "text",
-                "Size" => "28",
-                "Description" => "",
-                "Default" => "100",
-                'SimpleMode' => true,
+			"connections" => array(
+				"FriendlyName" => "Limit Connections",
+				"Type" => "text",
+				"Size" => "28",
+				"Description" => "",
+				"Default" => "100",
+				'SimpleMode' => true,
 
-            ),
-            "bitrate" => array(
-                "FriendlyName" => "Limit Bitrate",
-                "Type" => "dropdown",
-                "Size" => "28",
-                "Description" => "",
-                "Options" => "24,32,40,48,56,64,80,96,112,128,160,192,224,256,320,400,480,560,640,720,800,920,1024,1280,1536,1792,2048,2560,3072,3584,4096,4068,5120,5632,6144,6656,7168,7680,8192,9216,10240,11264,12228,13312,14336,99999",
-                "Default" => "100",
-                'SimpleMode' => true,
+			),
+			"bitrate" => array(
+				"FriendlyName" => "Limit Bitrate",
+				"Type" => "dropdown",
+				"Size" => "28",
+				"Description" => "",
+				"Options" => "24,32,40,48,56,64,80,96,112,128,160,192,224,256,320,400,480,560,640,720,800,920,1024,1280,1536,1792,2048,2560,3072,3584,4096,4068,5120,5632,6144,6656,7168,7680,8192,9216,10240,11264,12228,13312,14336,99999",
+				"Default" => "128",
+				'SimpleMode' => true,
 
-            ),
-            "transfer" => array(
-                "FriendlyName" => "Limit Data Transfer",
-                "Type" => "text",
-                "Size" => "28",
-                "Description" => "",
-                "Default" => "2TB",
-                'SimpleMode' => true,
+			),
+			"transfer" => array(
+				"FriendlyName" => "Limit Data Transfer",
+				"Type" => "text",
+				"Size" => "28",
+				"Description" => "",
+				"Default" => "2TB",
+				'SimpleMode' => true,
 
-            ),
-            "diskusage" => array(
-                "FriendlyName" => "Limit Disk Space",
-                "Type" => "text",
-                "Size" => "28",
-                "Description" => "",
-                "Default" => "500MB",
-                'SimpleMode' => true,
-            ),
-            "servicetype" => array(
-                "FriendlyName" => "Video Service Type",
-                "Type" => "dropdown",
-                "Size" => "28",
-                "Description" => "<br />Only applies to Video Streaming services.",
-                "Options" => ",Live Streaming,Live Streaming Low Latency,Ondemand Streaming,TV Station,Shoutcast,Live Camera Restream",
-                "Default" => "",
-                'SimpleMode' => true,
-            ),
-            "usernametype" => array(
-                "FriendlyName" => "Username Setting",
-                "Type" => "dropdown",
-                "Size" => "28",
-                "Description" => "",
-                "Options" => "Shared Client Email,Individual Accounts",
-                "Default" => ""
-            ),
-            "resellerplan" => array(
-                "FriendlyName" => "Reseller Plan ID",
-                "Type" => "text",
-                "Size" => "28",
-                "Description" => "<br />Enter Reseller Plan ID or leave blank for normal account.",
-                "Default" => ""
-            ),
-        );
+			),
+			"diskusage" => array(
+				"FriendlyName" => "Limit Disk Space",
+				"Type" => "text",
+				"Size" => "28",
+				"Description" => "",
+				"Default" => "500MB",
+				'SimpleMode' => true,
+			),
+			"servicetype" => array(
+				"FriendlyName" => "Video Service Type",
+				"Type" => "dropdown",
+				"Size" => "28",
+				"Description" => "<br />Only applies to Video Streaming services.",
+				"Options" => ",Live Streaming,Live Streaming Low Latency,Ondemand Streaming,TV Station,Shoutcast,Live Camera Restream",
+				"Default" => "",
+				'SimpleMode' => true,
+			),
+			"usernametype" => array(
+				"FriendlyName" => "Username Setting",
+				"Type" => "dropdown",
+				"Size" => "28",
+				"Description" => "",
+				"Options" => "Shared Client Email,Individual Accounts",
+				"Default" => ""
+			),
+			"resellerplan" => array(
+				"FriendlyName" => "Reseller Plan ID",
+				"Type" => "text",
+				"Size" => "28",
+				"Description" => "<br />Enter Reseller Plan ID or leave blank for normal account.",
+				"Default" => ""
+			),
+		);
 		return $configarray;
 	}
 
@@ -146,76 +146,76 @@
 		$ServiceData = mediacp_AdminServicesTabFieldsGet($params);
 
 		# Check if account already created
-        if ( $params['status'] == 'Active' ){
-            return "WHMCS service status is Active, please terminate or set status to Terminated and then try again.";
-        }
+		if ( $params['status'] == 'Active' ){
+			return "WHMCS service status is Active, please Terminate or set status to Terminated, then try again.";
+		}
 
 		if ( !empty($ServiceData['ServiceID']) ){
-            mediacp_TerminateAccount($params);
+			mediacp_TerminateAccount($params);
 		}
 
 		# Check User Account
-        $username = empty($Config['usernametype']) || $Config['usernametype'] == 'Shared Client Email' ?
-            trim($params['clientsdetails']['email']) :
-            (
+		$username = empty($Config['usernametype']) || $Config['usernametype'] == 'Shared Client Email' ?
+		trim($params['clientsdetails']['email']) :
+		(
             empty($params['username']) ? // If username is empty, then it's because WHMCS "Enable random usernames" is not enabled; we should use part of the email as username instead
-                substr(preg_replace("/[^a-zA-Z0-9]+/", "", $params['clientsdetails']['email']),0,8) . substr(uniqid(),8,12) :
-                trim($params['username'])
-            );
+            substr(preg_replace("/[^a-zA-Z0-9]+/", "", $params['clientsdetails']['email']),0,8) . substr(uniqid(),8,12) :
+            trim($params['username'])
+        );
 
-        $password = empty($Config['usernametype']) || $Config['usernametype'] == 'Shared Client Email' ? mediacp_getClientPassword($params['clientsdetails']['userid']) : trim($params['password']);
+		$password = empty($Config['usernametype']) || $Config['usernametype'] == 'Shared Client Email' ? mediacp_getClientPassword($params['clientsdetails']['userid']) : trim($params['password']);
 		$hash = SHA1($username . $password);
 
-			$api = array(
-				"rpc"		=> "admin.user_create",
-				"args"		=> array(
-								"auth"			=> $params['serveraccesshash'],
-								"username"		=> $username,
-								"hash"			=> $hash,
-								"user_email"	=> trim($params['clientsdetails']['email']),
-								"name"			=> trim($params['clientsdetails']['firstname']) . " " . trim($params['clientsdetails']['lastname']),
-								"contact_number"=> trim($params['clientsdetails']['phonenumber'])
-				)
-			);
+		$api = array(
+			"rpc"		=> "admin.user_create",
+			"args"		=> array(
+				"auth"			=> $params['serveraccesshash'],
+				"username"		=> $username,
+				"hash"			=> $hash,
+				"user_email"	=> trim($params['clientsdetails']['email']),
+				"name"			=> trim($params['clientsdetails']['firstname']) . " " . trim($params['clientsdetails']['lastname']),
+				"contact_number"=> trim($params['clientsdetails']['phonenumber'])
+			)
+		);
 
 			# Reseller Account?
-			if ( !empty($Config['resellerplan']) && is_numeric($Config['resellerplan']) ){
-				$api['args']['reseller_plan'] = $Config['resellerplan'];
-			}
+		if ( !empty($Config['resellerplan']) && is_numeric($Config['resellerplan']) ){
+			$api['args']['reseller_plan'] = $Config['resellerplan'];
+		}
 
 			# Execute API
-			$return = mediacp_api( $api, $params );
+		$return = mediacp_api( $api, $params );
 
 			# If user account exists and reseller plan specified, then update user account with reseller plan
-            if ( $return['status'] != 'success' && $return['error'] == 'User account already exists' && !empty($Config['resellerplan']) && is_numeric($Config['resellerplan']) ){
-                $return = mediacp_api( $api, [
-                    "rpc"		=> "admin.user_update",
-                    "args"		=> [
-                        "auth"			=> $params['serveraccesshash'],
-                        "username"		=> $username,
-                        "hash"			=> $hash,
-                        "user_email"	=> trim($params['clientsdetails']['email']),
-                        "name"			=> trim($params['clientsdetails']['firstname']) . " " . trim($params['clientsdetails']['lastname']),
-                        "contact_number"=> trim($params['clientsdetails']['phonenumber']),
-                        "reseller_plan" => $Config['resellerplan']
-                    ]
-                ]);
-            }
+		if ( $return['status'] != 'success' && $return['error'] == 'User account already exists' && !empty($Config['resellerplan']) && is_numeric($Config['resellerplan']) ){
+			$return = mediacp_api( $api, [
+				"rpc"		=> "admin.user_update",
+				"args"		=> [
+					"auth"			=> $params['serveraccesshash'],
+					"username"		=> $username,
+					"hash"			=> $hash,
+					"user_email"	=> trim($params['clientsdetails']['email']),
+					"name"			=> trim($params['clientsdetails']['firstname']) . " " . trim($params['clientsdetails']['lastname']),
+					"contact_number"=> trim($params['clientsdetails']['phonenumber']),
+					"reseller_plan" => $Config['resellerplan']
+				]
+			]);
+		}
 
             # if no reseller plan specified, return that user already exists error
-			if ( $return['status'] != 'success' && $return['error'] != 'User account already exists' ){
-				return $return['error'];
-			}
+		if ( $return['status'] != 'success' && $return['error'] != 'User account already exists' ){
+			return $return['error'];
+		}
 
 			# Update WHMCS Username & Password Fields
-			full_query("UPDATE tblhosting 	SET	username='".  $username  ."',
-												password='".  encrypt($password)  ."'
-											WHERE id='".$params["accountid"]."'");
+		full_query("UPDATE tblhosting 	SET	username='".  $username  ."',
+			password='".  encrypt($password)  ."'
+			WHERE id='".$params["accountid"]."'");
 
 
 
-			mediacp_AdminServicesTabFieldsUpdate($params, array("CustomerID"=>$return['id']));
-			$ServiceData['CustomerID'] = $return['id'];
+		mediacp_AdminServicesTabFieldsUpdate($params, array("CustomerID"=>$return['id']));
+		$ServiceData['CustomerID'] = $return['id'];
 
 
 		# Reseller Account?
@@ -229,27 +229,27 @@
 			"path"		=> $params['serverhostname'],
 			"rpc"		=> "admin.service_create",
 			"args"		=> array(
-							"auth"			=> $params['serveraccesshash'],
-							"plan"			=> false,
-							"rpc_extra"		=> 1,
-							"userid"		=> $ServiceData['CustomerID'],
+				"auth"			=> $params['serveraccesshash'],
+				"plan"			=> false,
+				"rpc_extra"		=> 1,
+				"userid"		=> $ServiceData['CustomerID'],
 
-							"password"		=> $password,
-							"adminpassword"	=> $password,
-							"plugin"		=> $Config['serviceplugin'],
-							"sourceplugin"	=> $Config['sourceplugin'],
-							"maxuser"		=> $Config['connections'],
-							"bitrate"		=> $Config['bitrate'],
-							"bandwidth"		=> $Config['transfer'],
-							"quota"			=> $Config['diskusage']
+				"password"		=> $password,
+				"adminpassword"	=> $password,
+				"plugin"		=> $Config['serviceplugin'],
+				"sourceplugin"	=> $Config['sourceplugin'],
+				"maxuser"		=> $Config['connections'],
+				"bitrate"		=> $Config['bitrate'],
+				"bandwidth"		=> $Config['transfer'],
+				"quota"			=> $Config['diskusage']
 			)
 		);
 
 		# Icecast source password
-        if ( $api['args']['plugin'] == 'icecast' || $api['args']['plugin'] == 'icecast_kh'){
-            unset($api['args']['password']);
-            $api['args']['customfields']['source_password'] = $password;
-        }
+		if ( $api['args']['plugin'] == 'icecast' || $api['args']['plugin'] == 'icecast_kh'){
+			unset($api['args']['password']);
+			$api['args']['customfields']['source_password'] = $password;
+		}
 
 		# Video Service Type
 		if ( $Config['serviceplugin'] == 'Wowza Streaming Engine' || $Config['serviceplugin'] == 'Flussonic' || $Config['serviceplugin'] == 'NginxRtmp' ){
@@ -264,14 +264,14 @@
 		if ( isset($params['customfields']['Publish Name']) )	$api['args']['unique_id'] = $params['customfields']['Publish Name'];
 
 		# If Publish name already specified then try to use that
-        if ( !empty($ServiceData['PublishName']) && strlen($ServiceData['PublishName']) > 3 ){
-            $api['args']['unique_id'] = $ServiceData['PublishName'];
-        }
+		if ( !empty($ServiceData['PublishName']) && strlen($ServiceData['PublishName']) > 3 ){
+			$api['args']['unique_id'] = $ServiceData['PublishName'];
+		}
 
         # Random combination for Video Services if no unique_id specified
-        if ( empty($api['args']['unique_id']) && in_array($api['args']['plugin'], ['WowzaMedia','Flussonic','NginxRtmp']) ){
-            $api['args']['unique_id'] = mediacp_generateStrongPassword(10,false,'l');
-        }
+		if ( empty($api['args']['unique_id']) && in_array($api['args']['plugin'], ['WowzaMedia','Flussonic','NginxRtmp']) ){
+			$api['args']['unique_id'] = mediacp_generateStrongPassword(10,false,'l');
+		}
 
 
 
@@ -311,8 +311,8 @@
 				"path"		=> $params['serverhostname'],
 				"rpc"		=> "admin.service_remove",
 				"args"		=> array(
-								"auth"			=> $params['serveraccesshash'],
-								"serverid"		=> $ServiceData['ServiceID'],
+					"auth"			=> $params['serveraccesshash'],
+					"serverid"		=> $ServiceData['ServiceID'],
 				)
 			);
 
@@ -344,8 +344,8 @@
 				"path"		=> $params['serverhostname'],
 				"rpc"		=> "admin.user_suspend_services",
 				"args"		=> array(
-								"auth"			=> $params['serveraccesshash'],
-								"userid"		=> $ServiceData['CustomerID']
+					"auth"			=> $params['serveraccesshash'],
+					"userid"		=> $ServiceData['CustomerID']
 
 				)
 			);
@@ -355,9 +355,9 @@
 				"path"		=> $params['serverhostname'],
 				"rpc"		=> "admin.user_update",
 				"args"		=> array(
-								"auth"			=> $params['serveraccesshash'],
-								"userid"		=> $ServiceData['CustomerID'],
-								"activated"		=> 0
+					"auth"			=> $params['serveraccesshash'],
+					"userid"		=> $ServiceData['CustomerID'],
+					"activated"		=> 0
 
 				)
 			);
@@ -374,10 +374,10 @@
 			"path"		=> $params['serverhostname'],
 			"rpc"		=> "admin.service_suspend",
 			"args"		=> array(
-							"auth"			=> $params['serveraccesshash'],
-							"ServerID"		=> $ServiceData['ServiceID'],
-							"Reason"		=> $params['suspendreason'],
-							"Days"			=> 9999999999999
+				"auth"			=> $params['serveraccesshash'],
+				"ServerID"		=> $ServiceData['ServiceID'],
+				"Reason"		=> $params['suspendreason'],
+				"Days"			=> 9999999999999
 
 			)
 		);
@@ -415,9 +415,9 @@
 				"path"		=> $params['serverhostname'],
 				"rpc"		=> "admin.user_update",
 				"args"		=> array(
-								"auth"			=> $params['serveraccesshash'],
-								"userid"		=> $ServiceData['CustomerID'],
-								"activated"		=> 1
+					"auth"			=> $params['serveraccesshash'],
+					"userid"		=> $ServiceData['CustomerID'],
+					"activated"		=> 1
 
 				)
 			);
@@ -434,9 +434,9 @@
 			"path"		=> $params['serverhostname'],
 			"rpc"		=> "admin.service_unsuspend",
 			"args"		=> array(
-							"auth"			=> $params['serveraccesshash'],
-							"ServerID"		=> $ServiceData['ServiceID'],
-							"start"			=> $params['suspendreason']
+				"auth"			=> $params['serveraccesshash'],
+				"ServerID"		=> $ServiceData['ServiceID'],
+				"start"			=> $params['suspendreason']
 
 			)
 		);
@@ -463,9 +463,9 @@
 			"path"		=> $params['serverhostname'],
 			"rpc"		=> "admin.user_update",
 			"args"		=> array(
-							"auth"			=> $params['serveraccesshash'],
-							"userid"		=> $ServiceData['CustomerID'],
-							"hash"			=> $hash
+				"auth"			=> $params['serveraccesshash'],
+				"userid"		=> $ServiceData['CustomerID'],
+				"hash"			=> $hash
 
 			)
 		);
@@ -492,12 +492,12 @@
 			"path"		=> $params['serverhostname'],
 			"rpc"		=> "admin.service_update",
 			"args"		=> array(
-							"auth"			=> $params['serveraccesshash'],
-							"ServerID"		=> $ServiceData['ServiceID'],
-							"maxuser"		=> $Config['connections'],
-							"bitrate"		=> $Config['bitrate'],
-							"bandwidth"		=> $Config['transfer'],
-							"quota"			=> $Config['diskusage']
+				"auth"			=> $params['serveraccesshash'],
+				"ServerID"		=> $ServiceData['ServiceID'],
+				"maxuser"		=> $Config['connections'],
+				"bitrate"		=> $Config['bitrate'],
+				"bandwidth"		=> $Config['transfer'],
+				"quota"			=> $Config['diskusage']
 			)
 		);
 		$api['args'] = mediacp_ProcessServiceOptions($api['args'], $params);
@@ -523,10 +523,10 @@
 		# Output can be returned like this, or defined via a clientarea.tpl template file (see docs for more info)
 
 		$code = '<form action="'.$panelUrl['url'].'" method="post" target="_blank">
-	<input type="hidden" name="username" value="'.$params["username"].'" />
-	<input type="hidden" name="user_password" value="'.$params["password"].'" />
-	<input type="submit" class="btn btn-primary" value="Login to Control Panel" />
-	</form>';
+		<input type="hidden" name="username" value="'.$params["username"].'" />
+		<input type="hidden" name="user_password" value="'.$params["password"].'" />
+		<input type="submit" class="btn btn-primary" value="Login to Control Panel" />
+		</form>';
 		return $code;
 
 	}
@@ -535,10 +535,10 @@
 
 		$panelUrl = mediacp_get_panel_url($params);
 		$code = '<form action="'.$panelUrl['url'].'" method="post" target="_blank">
-	<input type="hidden" name="username" value="'.$params["serverusername"].'" />
-	<input type="hidden" name="user_password" value="'.$params["serverpassword"].'" />
-	<input type="submit" value="Login to Control Panel" />
-	</form>';
+		<input type="hidden" name="username" value="'.$params["serverusername"].'" />
+		<input type="hidden" name="user_password" value="'.$params["serverpassword"].'" />
+		<input type="submit" value="Login to Control Panel" />
+		</form>';
 		return $code;
 
 	}
@@ -564,8 +564,8 @@
 			"path"		=> $params['serverhostname'],
 			"rpc"		=> "service.restart",
 			"args"		=> array(
-							"auth"			=> $params['serveraccesshash'],
-							"ServerID"		=> $ServiceData['ServiceID']
+				"auth"			=> $params['serveraccesshash'],
+				"ServerID"		=> $ServiceData['ServiceID']
 
 			)
 		);
@@ -588,8 +588,8 @@
 			"path"		=> $params['serverhostname'],
 			"rpc"		=> "service.stop",
 			"args"		=> array(
-							"auth"			=> $params['serveraccesshash'],
-							"ServerID"		=> $ServiceData['ServiceID']
+				"auth"			=> $params['serveraccesshash'],
+				"ServerID"		=> $ServiceData['ServiceID']
 
 			)
 		);
@@ -612,8 +612,8 @@
 			"path"		=> $params['serverhostname'],
 			"rpc"		=> "source.restart",
 			"args"		=> array(
-							"auth"			=> $params['serveraccesshash'],
-							"ServerID"		=> $ServiceData['ServiceID']
+				"auth"			=> $params['serveraccesshash'],
+				"ServerID"		=> $ServiceData['ServiceID']
 
 			)
 		);
@@ -635,8 +635,8 @@
 			"path"		=> $params['serverhostname'],
 			"rpc"		=> "source.stop",
 			"args"		=> array(
-							"auth"			=> $params['serveraccesshash'],
-							"ServerID"		=> $ServiceData['ServiceID']
+				"auth"			=> $params['serveraccesshash'],
+				"ServerID"		=> $ServiceData['ServiceID']
 
 			)
 		);
@@ -651,21 +651,21 @@
 
 	function mediacp_ClientAreaCustomButtonArray() {
 		$buttonarray = array(
-		 "Restart Service" => "restart",
-		 "Stop Service" => "stop",
-		 "Restart Source" => "restartsource",
-		 "Stop Source" => "stopsource",
+			"Restart Service" => "restart",
+			"Stop Service" => "stop",
+			"Restart Source" => "restartsource",
+			"Stop Source" => "stopsource",
 		);
 		return $buttonarray;
 	}
 
 	function mediacp_AdminCustomButtonArray() {
 		$buttonarray = array(
-		 "Restart" => "restart",
-		 "Stop" => "stop",
-		 "Restart Source" => "restartsource",
-		 "Stop Source" => "stopsource",
-		 "Update Usage" => "UsageUpdate",
+			"Restart" => "restart",
+			"Stop" => "stop",
+			"Restart Source" => "restartsource",
+			"Stop Source" => "stopsource",
+			"Update Usage" => "UsageUpdate",
 		);
 		return $buttonarray;
 	}
@@ -699,7 +699,7 @@
 			"path"		=> $params['serverhostname'],
 			"rpc"		=> "admin.service_usage",
 			"args"		=> array(
-							"auth"			=> $params['serveraccesshash']
+				"auth"			=> $params['serveraccesshash']
 
 			)
 		);
@@ -712,35 +712,35 @@
 
 
         # Now loop through results and update DB
-        foreach ($return['usage'] AS $serviceid=>$values) {
-            $service = Capsule::table('mod_mediacp_fields')->select('service_id')->where('ServiceID',$serviceid)->first();
-            if ( !$service ) continue;
-            try {
-                Capsule::table('tblhosting')
-                    ->where('id',$service->service_id)
-                    ->update([
-                        'diskusage' 	=> $values['DiskUsed'],
-                        'disklimit' 	=> $values['DiskLimit'],
-                        'bwusage' 		=> $values['TransferUsed'],
-                        'bwlimit' 		=> $values['TransferLimit'],
-                        'lastupdate'	=> Capsule::raw('now()'),
+		foreach ($return['usage'] AS $serviceid=>$values) {
+			$service = Capsule::table('mod_mediacp_fields')->select('service_id')->where('ServiceID',$serviceid)->first();
+			if ( !$service ) continue;
+			try {
+				Capsule::table('tblhosting')
+				->where('id',$service->service_id)
+				->update([
+					'diskusage' 	=> $values['DiskUsed'],
+					'disklimit' 	=> $values['DiskLimit'],
+					'bwusage' 		=> $values['TransferUsed'],
+					'bwlimit' 		=> $values['TransferLimit'],
+					'lastupdate'	=> Capsule::raw('now()'),
 
-                    ]);
-            } catch (\Exception $e) {
+				]);
+			} catch (\Exception $e) {
                 // Handle any error which may occur
-            }
-        }
+			}
+		}
 
 	}
 
 	function mediacp_AdminServicesTabFieldsGet($params){
 		mediacp_checkTableCreation();
-        $data = (array) Capsule::table('mod_mediacp_fields')->where('service_id',$params['serviceid'])->get()->toArray()[0];
+		$data = (array) Capsule::table('mod_mediacp_fields')->where('service_id',$params['serviceid'])->get()->toArray()[0];
 
 		return array(
-					"CustomerID" => $data['CustomerID'],
-					"ServiceID" => $data['ServiceID'],
-					"PublishName" => $data['PublishName']
+			"CustomerID" => $data['CustomerID'],
+			"ServiceID" => $data['ServiceID'],
+			"PublishName" => $data['PublishName']
 					//"Service Link" => $data['ServiceLink'],
 					//"RTMP Link"	=> $data['RTMP'],
 					//"RTSP Link" => $data['RTSP']
@@ -748,9 +748,9 @@
 		);
 	}
 	function mediacp_AdminServicesTabFieldsUpdate($params, $dataarray){
-	    $adminFields = Capsule::table('mod_mediacp_fields')->where('service_id',$params['serviceid']);
+		$adminFields = Capsule::table('mod_mediacp_fields')->where('service_id',$params['serviceid']);
 		if ( $adminFields->count() == 0 ){
-		    Capsule::table("mod_mediacp_fields")->insert(['service_id'=>$params['serviceid']]);
+			Capsule::table("mod_mediacp_fields")->insert(['service_id'=>$params['serviceid']]);
 		}
 		$adminFields->update($dataarray);
 
@@ -798,7 +798,7 @@
 			quota
 		*/
 
-		/* CONFIGURABLE OPTIOSN & VALIDATION */
+			/* CONFIGURABLE OPTIOSN & VALIDATION */
 			$configoptions = $params['configoptions'];
 
 			# Plugin / Media Service
@@ -807,28 +807,28 @@
 			switch($args['plugin']){
 				case 'Shoutcast':
 				case 'Shoutcast 2':
-					$args['plugin'] = 'shoutcast2';
-					$args['adminpassword'] = mediacp_generatePassword();
+				$args['plugin'] = 'shoutcast2';
+				$args['adminpassword'] = mediacp_generatePassword();
 				break;
 
 				case 'Shoutcast 198':
-					$args['plugin'] = 'shoutcast198';
+				$args['plugin'] = 'shoutcast198';
 				break;
 
 				case 'Icecast':
 				case 'Icecast 2':
-					$args['plugin'] = 'icecast';
-                    $args['customfields']['source_password'] = $args['password'];
-                    $args['password'] = mediacp_generatePassword();
-                    unset($args['adminpassword']);
+				$args['plugin'] = 'icecast';
+				$args['customfields']['source_password'] = $args['password'];
+				$args['password'] = mediacp_generatePassword();
+				unset($args['adminpassword']);
 				break;
 
 				case 'Icecast KH':
 				case 'Icecast 2 KH':
-					$args['plugin'] = 'icecast_kh';
-                    $args['customfields']['source_password'] = $args['password'];
-                    $args['password'] = mediacp_generatePassword();
-                    unset($args['adminpassword']);
+				$args['plugin'] = 'icecast_kh';
+				$args['customfields']['source_password'] = $args['password'];
+				$args['password'] = mediacp_generatePassword();
+				unset($args['adminpassword']);
 				break;
 
 				case 'Audio Transcoder':
@@ -836,7 +836,7 @@
 				case 'Transcoder':
 				case 'Shoutcast Transcoder':
 				case 'Icecast Transcoder':
-					$args['plugin'] = 'AudioTranscoder';
+				$args['plugin'] = 'AudioTranscoder';
 				break;
 
 				case 'Wowza Streaming Engine':
@@ -844,19 +844,19 @@
 				case 'Wowza Media Services':
 				case 'Flash Media Service':
 				case 'Flash Media':
-					$args['plugin'] = 'WowzaMedia';
+				$args['plugin'] = 'WowzaMedia';
 				break;
 
 				case 'Flussonic':
-					$args['plugin'] = 'Flussonic';
-					break;
+				$args['plugin'] = 'Flussonic';
+				break;
 				case 'NginxRtmp':
-					$args['plugin'] = 'NginxRtmp';
-					break;
+				$args['plugin'] = 'NginxRtmp';
+				break;
 
 				case 'Windows Media Services':
 				case 'Windows Media':
-					$args['plugin'] = 'windowsMediaServices';
+				$args['plugin'] = 'windowsMediaServices';
 				break;
 			}
 
@@ -878,40 +878,40 @@
 
 					/** AUTO SELECT **/
 					case 'Yes':
-						unset($args['sourceplugin']);
-						if ( $args['plugin'] == 'shoutcast198' ) $args['sourceplugin'] = 'sctransv2';
-						if ( $args['plugin'] == 'shoutcast2' ) $args['sourceplugin'] = 'sctransv2';
-						if ( $args['plugin'] == 'icescast2' ) $args['sourceplugin'] = 'sctransv2';
-						if ( $args['plugin'] == 'icecast_kh' ) $args['sourceplugin'] = 'sctransv2';
+					unset($args['sourceplugin']);
+					if ( $args['plugin'] == 'shoutcast198' ) $args['sourceplugin'] = 'sctransv2';
+					if ( $args['plugin'] == 'shoutcast2' ) $args['sourceplugin'] = 'sctransv2';
+					if ( $args['plugin'] == 'icescast2' ) $args['sourceplugin'] = 'sctransv2';
+					if ( $args['plugin'] == 'icecast_kh' ) $args['sourceplugin'] = 'sctransv2';
 					break;
 
 					/** END BEST MATCHING **/
 
 					case 'sctransv1':
 					case 'Shoutcast Transcoder V1':
-						$args['sourceplugin'] = 'sctransv1';
+					$args['sourceplugin'] = 'sctransv1';
 					break;
 					case 'sctransv2':
 					case 'Shoutcast Transcoder V2':
-						$args['sourceplugin'] = 'sctransv2';
+					$args['sourceplugin'] = 'sctransv2';
 					break;
 					case 'Ices 0.4 (MP3)':
 					case 'Ices 0.4':
 					case 'Ices':
 					case 'ices04':
-							$args['sourceplugin'] = 'ices04';
+					$args['sourceplugin'] = 'ices04';
 					break;
 					case 'Ices 2.0 (OGG)':
 					case 'Ices 2.0':
 					case 'Ices 2':
 					case 'ices20':
-							$args['sourceplugin'] = 'ices20';
+					$args['sourceplugin'] = 'ices20';
 					break;
 					case 'Stream Transcoder V3':
-							$args['sourceplugin'] = 'streamtranscoderv3';
+					$args['sourceplugin'] = 'streamtranscoderv3';
 					break;
 					case 'Liquidsoap':
-							$args['sourceplugin'] = 'liquidsoap';
+					$args['sourceplugin'] = 'liquidsoap';
 					break;
 				}
 
@@ -920,49 +920,49 @@
 				# Check Supported AutoDJ
 				switch($args['plugin']){
 					case 'shoutcast2':
-						if ( $args['sourceplugin'] != 'sctransv2' && $args['sourceplugin'] != 'liquidsoap'){
-							$args['sourceplugin'] = 'sctransv2';
-						}
+					if ( $args['sourceplugin'] != 'sctransv2' && $args['sourceplugin'] != 'liquidsoap'){
+						$args['sourceplugin'] = 'sctransv2';
+					}
 					break;
 					case 'shoutcast198':
-						if ( $args['sourceplugin'] != 'sctransv1' &&
-							$args['sourceplugin'] != 'sctransv2' &&
-							$args['sourceplugin'] != 'liquidsoap' &&
-							$args['sourceplugin'] != 'ices04' &&
-							$args['sourceplugin'] != 'ices20')
-						{
-							$args['sourceplugin'] = 'sctransv2';
-						}
+					if ( $args['sourceplugin'] != 'sctransv1' &&
+						$args['sourceplugin'] != 'sctransv2' &&
+						$args['sourceplugin'] != 'liquidsoap' &&
+						$args['sourceplugin'] != 'ices04' &&
+						$args['sourceplugin'] != 'ices20')
+					{
+						$args['sourceplugin'] = 'sctransv2';
+					}
 					break;
 					case 'icecast':
-						if (
-							$args['sourceplugin'] != 'sctransv2' &&
-							$args['sourceplugin'] != 'liquidsoap' &&
-							$args['sourceplugin'] != 'ices04' &&
-							$args['sourceplugin'] != 'ices20')
-						{
-							$args['sourceplugin'] = 'sctransv2';
-						}
+					if (
+						$args['sourceplugin'] != 'sctransv2' &&
+						$args['sourceplugin'] != 'liquidsoap' &&
+						$args['sourceplugin'] != 'ices04' &&
+						$args['sourceplugin'] != 'ices20')
+					{
+						$args['sourceplugin'] = 'sctransv2';
+					}
 					break;
 					case 'icecast_kh':
-						if (
-							$args['sourceplugin'] != 'sctransv2' &&
-							$args['sourceplugin'] != 'liquidsoap' &&
-							$args['sourceplugin'] != 'ices04' &&
-							$args['sourceplugin'] != 'ices20')
-						{
-							$args['sourceplugin'] = 'sctransv2';
-						}
+					if (
+						$args['sourceplugin'] != 'sctransv2' &&
+						$args['sourceplugin'] != 'liquidsoap' &&
+						$args['sourceplugin'] != 'ices04' &&
+						$args['sourceplugin'] != 'ices20')
+					{
+						$args['sourceplugin'] = 'sctransv2';
+					}
 
 					break;
 					case 'AudioTranscoder':
 					case 'WowzaMedia':
 					case 'Flussonic':
 					case 'NginxRtmp':
-						unset($args['sourceplugin']);
+					unset($args['sourceplugin']);
 					break;
 					case 'windowsMediaServices':
-						unset($args['sourceplugin']);
+					unset($args['sourceplugin']);
 					break;
 				}
 			}
@@ -1000,9 +1000,9 @@
 			$args['bandwidth']	= mediacp_ConvertUnitsToMegabyte($args['bandwidth']); # VALIDATION
 
             # Stream Auth
-            if ( isset($configoptions['Stream Auth']) )	             $args['streamauth'] = (strtolower($configoptions['Stream Auth'])=='yes'||$configoptions['Stream Auth']==1?'enabled':'disabled');
-            if ( isset($configoptions['Stream Authentication']) )	 $args['streamauth'] = (strtolower($configoptions['Stream Authentication'])=='yes'||$configoptions['Stream Authentication']==1?'enabled':'disabled');
-            if ( isset($configoptions['Listener Authentication']) )	 $args['streamauth'] = (strtolower($configoptions['Listener Authentication'])=='yes'||$configoptions['Listener Authentication']==1?'enabled':'disabled');
+			if ( isset($configoptions['Stream Auth']) )	             $args['streamauth'] = (strtolower($configoptions['Stream Auth'])=='yes'||$configoptions['Stream Auth']==1?'enabled':'disabled');
+			if ( isset($configoptions['Stream Authentication']) )	 $args['streamauth'] = (strtolower($configoptions['Stream Authentication'])=='yes'||$configoptions['Stream Authentication']==1?'enabled':'disabled');
+			if ( isset($configoptions['Listener Authentication']) )	 $args['streamauth'] = (strtolower($configoptions['Listener Authentication'])=='yes'||$configoptions['Listener Authentication']==1?'enabled':'disabled');
 
 
 			if ( isset($configoptions['Geo Locking']) )				$args['customfields']['geolock'] = (strtolower($configoptions['Geo Locking'])=='yes'||$configoptions['Geo Locking']==1?1:0);
@@ -1027,62 +1027,62 @@
 			if ( $args['customfields']['servicetype'] == 'Shoutcast/Icecast Relay' ) $args['customfields']['servicetype'] = 'Shoutcast';
 
 			if ( 	$args['plugin'] == 'WowzaMedia' &&
-					isset($args['customfields']['servicetype']) &&
-					$args['customfields']['servicetype'] != 'Live Streaming' &&
-					$args['customfields']['servicetype'] != 'Live Streaming Low Latency' &&
-					$args['customfields']['servicetype'] != 'TV Station' &&
-					$args['customfields']['servicetype'] != 'Ondemand Streaming' &&
-					$args['customfields']['servicetype'] != 'Shoutcast' &&
-					$args['customfields']['servicetype'] != 'Stream Relay'
-				){
+				isset($args['customfields']['servicetype']) &&
+				$args['customfields']['servicetype'] != 'Live Streaming' &&
+				$args['customfields']['servicetype'] != 'Live Streaming Low Latency' &&
+				$args['customfields']['servicetype'] != 'TV Station' &&
+				$args['customfields']['servicetype'] != 'Ondemand Streaming' &&
+				$args['customfields']['servicetype'] != 'Shoutcast' &&
+				$args['customfields']['servicetype'] != 'Stream Relay'
+			){
 				$args['customfields']['servicetype'] = 'Live Streaming';
-			}
-			if ( 	$args['plugin'] == 'Flussonic' &&
-					isset($args['customfields']['servicetype']) &&
-					$args['customfields']['servicetype'] != 'Live Streaming' &&
-					$args['customfields']['servicetype'] != 'TV Station' &&
-					$args['customfields']['servicetype'] != 'Ondemand Streaming'
-				){
-				$args['customfields']['servicetype'] = 'Live Streaming';
-			}
-			if ( 	$args['plugin'] == 'NginxRtmp' &&
-					isset($args['customfields']['servicetype']) &&
-					$args['customfields']['servicetype'] != 'Live Streaming' &&
-			    		$args['customfields']['servicetype'] != 'TV Station' &&
-					$args['customfields']['servicetype'] != 'Relay'
-				){
-				$args['customfields']['servicetype'] = 'Live Streaming';
-			}
+		}
+		if ( 	$args['plugin'] == 'Flussonic' &&
+			isset($args['customfields']['servicetype']) &&
+			$args['customfields']['servicetype'] != 'Live Streaming' &&
+			$args['customfields']['servicetype'] != 'TV Station' &&
+			$args['customfields']['servicetype'] != 'Ondemand Streaming'
+		){
+			$args['customfields']['servicetype'] = 'Live Streaming';
+	}
+	if ( 	$args['plugin'] == 'NginxRtmp' &&
+		isset($args['customfields']['servicetype']) &&
+		$args['customfields']['servicetype'] != 'Live Streaming' &&
+		$args['customfields']['servicetype'] != 'TV Station' &&
+		$args['customfields']['servicetype'] != 'Relay'
+	){
+		$args['customfields']['servicetype'] = 'Live Streaming';
+}
 
 			# Wowza VHOST Configuration
-			if ( isset($params['customfields']['Wowza VHost']) ){
-				$args['customfields']['vhost'] = trim($params['customfields']['Wowza VHost']);
-			}
+if ( isset($params['customfields']['Wowza VHost']) ){
+	$args['customfields']['vhost'] = trim($params['customfields']['Wowza VHost']);
+}
 
 
 			# Wowza Live Authentication - live_authentication
-			if ( isset($configoptions['Live Authentication']) )		$args['customfields']['live_authentication'] = (strtolower($configoptions['Live Authentication'])=='yes'||$configoptions['Live Authentication']==1?'Enabled':'Disabled');
+if ( isset($configoptions['Live Authentication']) )		$args['customfields']['live_authentication'] = (strtolower($configoptions['Live Authentication'])=='yes'||$configoptions['Live Authentication']==1?'Enabled':'Disabled');
 
 			# Wowza Transcoder Support
-			if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['Transcoder']) )			$args['customfields']['wowza_transcoder'] = (strtolower($configoptions['Transcoder'])=='yes'||$configoptions['Transcoder']==1?'enabled':'disabled');
-			if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['Transcoder Service']) )	$args['customfields']['wowza_transcoder'] = (strtolower($configoptions['Transcoder Service'])=='yes'||$configoptions['Transcoder Service']==1?'enabled':'disabled');
-			if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['Transcoder Profiles']) )	$args['customfields']['transcoder_profiles'] = $configoptions['Transcoder Profiles'];
+if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['Transcoder']) )			$args['customfields']['wowza_transcoder'] = (strtolower($configoptions['Transcoder'])=='yes'||$configoptions['Transcoder']==1?'enabled':'disabled');
+if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['Transcoder Service']) )	$args['customfields']['wowza_transcoder'] = (strtolower($configoptions['Transcoder Service'])=='yes'||$configoptions['Transcoder Service']==1?'enabled':'disabled');
+if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['Transcoder Profiles']) )	$args['customfields']['transcoder_profiles'] = $configoptions['Transcoder Profiles'];
 
 			# Wowza nDVR
-			if ( $args['plugin'] == 'Flussonic' && isset($configoptions['nDVR']) )			$args['customfields']['ndvr'] = (strtolower($configoptions['nDVR'])=='yes'||$configoptions['nDVR']==1?'enabled':'disabled');
-			if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['nDVR']) )			$args['customfields']['wowza_ndvr'] = (strtolower($configoptions['nDVR'])=='yes'||$configoptions['nDVR']==1?'enabled':'disabled');
-			if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['nDVR AddOn']) )		$args['customfields']['wowza_ndvr'] = (strtolower($configoptions['nDVR AddOn'])=='yes'||$configoptions['nDVR AddOn']==1?'enabled':'disabled');
-			if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['nDVR Playback']) )	$args['customfields']['wowza_ndvr'] = (strtolower($configoptions['nDVR Playback'])=='yes'||$configoptions['nDVR Playback']==1?'enabled':'disabled');
+if ( $args['plugin'] == 'Flussonic' && isset($configoptions['nDVR']) )			$args['customfields']['ndvr'] = (strtolower($configoptions['nDVR'])=='yes'||$configoptions['nDVR']==1?'enabled':'disabled');
+if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['nDVR']) )			$args['customfields']['wowza_ndvr'] = (strtolower($configoptions['nDVR'])=='yes'||$configoptions['nDVR']==1?'enabled':'disabled');
+if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['nDVR AddOn']) )		$args['customfields']['wowza_ndvr'] = (strtolower($configoptions['nDVR AddOn'])=='yes'||$configoptions['nDVR AddOn']==1?'enabled':'disabled');
+if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['nDVR Playback']) )	$args['customfields']['wowza_ndvr'] = (strtolower($configoptions['nDVR Playback'])=='yes'||$configoptions['nDVR Playback']==1?'enabled':'disabled');
 
 			# Wowza Live Stream Recording
-			if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['Stream Recording']) )			$args['customfields']['wowza_record'] = (strtolower($configoptions['Stream Recording'])=='yes'||$configoptions['Stream Recording']==1?'enabled':'disabled');
-			if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['Live Stream Recording']) )		$args['customfields']['wowza_record'] = (strtolower($configoptions['Live Stream Recording'])=='yes'||$configoptions['Live Stream Recording']==1?'enabled':'disabled');
+if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['Stream Recording']) )			$args['customfields']['wowza_record'] = (strtolower($configoptions['Stream Recording'])=='yes'||$configoptions['Stream Recording']==1?'enabled':'disabled');
+if ( $args['plugin'] == 'WowzaMedia' && isset($configoptions['Live Stream Recording']) )		$args['customfields']['wowza_record'] = (strtolower($configoptions['Live Stream Recording'])=='yes'||$configoptions['Live Stream Recording']==1?'enabled':'disabled');
 
 
 			# RTMP / RTSP Enabled
-			if ( isset($configoptions['RTMP']) )					$args['customfields']['rtmpenabled'] = (strtolower($configoptions['RTMP'])=='yes'||$configoptions['RTMP']==1?'yes':'no');
-			if ( isset($configoptions['RTMP Support']) )			$args['customfields']['rtmpenabled'] = (strtolower($configoptions['RTMP Support'])=='yes'||$configoptions['RTMP Support']==1?'yes':'no');
-			if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenabled'] = (strtolower($configoptions['RTMP Service'])=='yes'||$configoptions['RTMP Service']==1?'yes':'no');
+if ( isset($configoptions['RTMP']) )					$args['customfields']['rtmpenabled'] = (strtolower($configoptions['RTMP'])=='yes'||$configoptions['RTMP']==1?'yes':'no');
+if ( isset($configoptions['RTMP Support']) )			$args['customfields']['rtmpenabled'] = (strtolower($configoptions['RTMP Support'])=='yes'||$configoptions['RTMP Support']==1?'yes':'no');
+if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenabled'] = (strtolower($configoptions['RTMP Service'])=='yes'||$configoptions['RTMP Service']==1?'yes':'no');
 
 			/*
 			 * Stream Targets
@@ -1098,16 +1098,16 @@
 			if ( isset($configoptions['RTMP Publishing']) && strtolower($configoptions['RTMP Publishing'])=='yes'||$configoptions['RTMP Publishing']==1 )		$streamTargets[] = 'RTMP';
 			if ( count($streamTargets) > 0 ) $args['customfields']['streamtargets'] = $streamTargets;
 
-            if ( isset($configoptions['Stream Targets']) )			$args['customfields']['stream_targets_limit'] = (int) $configoptions['Stream Targets'];
-            if ( isset($configoptions['# Stream Targets']) )			$args['customfields']['stream_targets_limit'] = (int) $configoptions['# Stream Targets'];
+			if ( isset($configoptions['Stream Targets']) )			$args['customfields']['stream_targets_limit'] = (int) $configoptions['Stream Targets'];
+			if ( isset($configoptions['# Stream Targets']) )			$args['customfields']['stream_targets_limit'] = (int) $configoptions['# Stream Targets'];
 
 			/*
 			 * Stream Proxy
 			 * server_proxy
 			 */
-            if ( isset($configoptions['Stream Proxy']) )					$args['proxy'] = (strtolower($configoptions['Stream Proxy'])=='yes'||$configoptions['Stream Proxy']==1?1:0);
+			if ( isset($configoptions['Stream Proxy']) )					$args['proxy'] = (strtolower($configoptions['Stream Proxy'])=='yes'||$configoptions['Stream Proxy']==1?1:0);
 
-		/** CUSTOM FIELDS **/
+			/** CUSTOM FIELDS **/
 
 			# Publish Name
 			if ( isset($params['customfields']['Publish Name']) )	$args['unique_id'] = $params['customfields']['Publish Name'];
@@ -1124,293 +1124,293 @@
 			if ( isset($params['customfields']['IPCAM Address']) )		$args['customfields']['shoutcast_address'] = $params['customfields']['IPCAM Address'];
 
 
-		return $args;
-	}
-
-	function mediacp_ConvertUnitsToMegabyte( $value ){
-		if ( empty($value) ) return 0;
-		if ( strtolower(trim($value)) == 'unlimited' ) return 999999;
-
-		$numeric = preg_replace("/[^0-9]/i",'', $value);
-		$unit = strtolower( trim( preg_replace("/[^a-z]/i",'', $value) ) );
-
-		switch($unit){
-			case 'kb':			return $numeric / 1024;			break;
-			default: case 'mb':	return $numeric;				break;
-			case 'gb':			return $numeric * 1024;			break;
-			case 'tb':			return $numeric * 1024 * 1024;	break;
+			return $args;
 		}
 
-		return $numeric;
+		function mediacp_ConvertUnitsToMegabyte( $value ){
+			if ( empty($value) ) return 0;
+			if ( strtolower(trim($value)) == 'unlimited' ) return 999999;
 
-	}
+			$numeric = preg_replace("/[^0-9]/i",'', $value);
+			$unit = strtolower( trim( preg_replace("/[^a-z]/i",'', $value) ) );
 
-	function mediacp_generatePassword($length = 12)	{
-		return mediacp_generateStrongPassword($length,false,'lud');
-	}
+			switch($unit){
+				case 'kb':			return $numeric / 1024;			break;
+				default: case 'mb':	return $numeric;				break;
+				case 'gb':			return $numeric * 1024;			break;
+				case 'tb':			return $numeric * 1024 * 1024;	break;
+			}
 
-	function mediacp_generateStrongPassword($length = 12, $add_dashes = false, $available_sets = 'luds')
-	{
-		$sets = array();
-		if(strpos($available_sets, 'l') !== false)
-			$sets[] = 'abcdefghjkmnpqrstuvwxyz';
-		if(strpos($available_sets, 'u') !== false)
-			$sets[] = 'ABCDEFGHJKMNPQRSTUVWXYZ';
-		if(strpos($available_sets, 'd') !== false)
-			$sets[] = '23456789';
-		if(strpos($available_sets, 's') !== false)
-			$sets[] = '!@$%*?';
+			return $numeric;
 
-		$all = '';
-		$password = '';
-		foreach($sets as $set)
+		}
+
+		function mediacp_generatePassword($length = 12)	{
+			return mediacp_generateStrongPassword($length,false,'lud');
+		}
+
+		function mediacp_generateStrongPassword($length = 12, $add_dashes = false, $available_sets = 'luds')
 		{
-			$password .= $set[array_rand(str_split($set))];
-			$all .= $set;
+			$sets = array();
+			if(strpos($available_sets, 'l') !== false)
+				$sets[] = 'abcdefghjkmnpqrstuvwxyz';
+			if(strpos($available_sets, 'u') !== false)
+				$sets[] = 'ABCDEFGHJKMNPQRSTUVWXYZ';
+			if(strpos($available_sets, 'd') !== false)
+				$sets[] = '23456789';
+			if(strpos($available_sets, 's') !== false)
+				$sets[] = '!@$%*?';
+
+			$all = '';
+			$password = '';
+			foreach($sets as $set)
+			{
+				$password .= $set[array_rand(str_split($set))];
+				$all .= $set;
+			}
+
+			$all = str_split($all);
+			for($i = 0; $i < $length - count($sets); $i++)
+				$password .= $all[array_rand($all)];
+
+			$password = str_shuffle($password);
+
+			if(!$add_dashes)
+				return $password;
+
+			$dash_len = floor(sqrt($length));
+			$dash_str = '';
+			while(strlen($password) > $dash_len)
+			{
+				$dash_str .= substr($password, 0, $dash_len) . '-';
+				$password = substr($password, $dash_len);
+			}
+			$dash_str .= $password;
+			return $dash_str;
 		}
 
-		$all = str_split($all);
-		for($i = 0; $i < $length - count($sets); $i++)
-			$password .= $all[array_rand($all)];
-
-		$password = str_shuffle($password);
-
-		if(!$add_dashes)
-			return $password;
-
-		$dash_len = floor(sqrt($length));
-		$dash_str = '';
-		while(strlen($password) > $dash_len)
-		{
-			$dash_str .= substr($password, 0, $dash_len) . '-';
-			$password = substr($password, $dash_len);
-		}
-		$dash_str .= $password;
-		return $dash_str;
-	}
-
-	function mediacp_DetectUpgradeServiceID($params){
+		function mediacp_DetectUpgradeServiceID($params){
 
 		# If domain is empty, service has not been provisioned
-		if ( empty($params['domain']) ) return false;
+			if ( empty($params['domain']) ) return false;
 
-		$ServiceData = mediacp_AdminServicesTabFieldsGet($params);
+			$ServiceData = mediacp_AdminServicesTabFieldsGet($params);
 
 
-		if ( $ServiceData['CustomerID'] == '' || $ServiceData['CustomerID'] == 0 ){
+			if ( $ServiceData['CustomerID'] == '' || $ServiceData['CustomerID'] == 0 ){
 
 			# Attempt to Locate & Update CustomerID
-			$api = array(
-				"path"		=> $params['serverhostname'],
-				"rpc"		=> "admin.user_update",
-				"args"		=> array(
-								"auth"			=> $params['serveraccesshash'],
-								"username"		=> $params['clientsdetails']['email']
-				)
-			);
-			$return = mediacp_api( $api, $params );
-			if ( isset($return['id']) && is_numeric($return['id']) ){
-				mediacp_AdminServicesTabFieldsUpdate($params, array("CustomerID"=>$return['id']));
-			}else{
-				mediacp_AdminServicesTabFieldsUpdate($params, array("CustomerID"=>'COULD NOT DETERMINE'));
+				$api = array(
+					"path"		=> $params['serverhostname'],
+					"rpc"		=> "admin.user_update",
+					"args"		=> array(
+						"auth"			=> $params['serveraccesshash'],
+						"username"		=> $params['clientsdetails']['email']
+					)
+				);
+				$return = mediacp_api( $api, $params );
+				if ( isset($return['id']) && is_numeric($return['id']) ){
+					mediacp_AdminServicesTabFieldsUpdate($params, array("CustomerID"=>$return['id']));
+				}else{
+					mediacp_AdminServicesTabFieldsUpdate($params, array("CustomerID"=>'COULD NOT DETERMINE'));
+				}
 			}
-		}
 
-		if ( $ServiceData['ServiceID'] == '' || $ServiceData['ServiceID'] == 0 ){
+			if ( $ServiceData['ServiceID'] == '' || $ServiceData['ServiceID'] == 0 ){
 
-			$api = array(
-				"path"		=> $params['serverhostname'],
-				"rpc"		=> "service.overview",
-				"args"		=> array(
-								"auth"			=> $params['serveraccesshash'],
-								"unique_id"		=> $ServiceData['PublishName']
-				)
-			);
+				$api = array(
+					"path"		=> $params['serverhostname'],
+					"rpc"		=> "service.overview",
+					"args"		=> array(
+						"auth"			=> $params['serveraccesshash'],
+						"unique_id"		=> $ServiceData['PublishName']
+					)
+				);
 
-			if ( empty($ServiceData['PublishName']) ){
-			    unset($api['args']['unique_id']);
+				if ( empty($ServiceData['PublishName']) ){
+					unset($api['args']['unique_id']);
                 # Attempt to Locate & Update ServiceID based on domain param
-			    $api['args']['portbase'] = @explode(':', $params['domain'])[1];
-            }
+					$api['args']['portbase'] = @explode(':', $params['domain'])[1];
+				}
 
-			$return = mediacp_api( $api, $params );
-			if ( isset($return['serverData']['id']) && is_numeric($return['serverData']['id']) ){
-				mediacp_AdminServicesTabFieldsUpdate($params, array("ServiceID"=>$return['serverData']['id']));
-				mediacp_AdminServicesTabFieldsUpdate($params, array("PublishName"=>$return['serverData']['unique_id']));
-			}else{
-				mediacp_AdminServicesTabFieldsUpdate($params, array("ServiceID"=>'0'));
+				$return = mediacp_api( $api, $params );
+				if ( isset($return['serverData']['id']) && is_numeric($return['serverData']['id']) ){
+					mediacp_AdminServicesTabFieldsUpdate($params, array("ServiceID"=>$return['serverData']['id']));
+					mediacp_AdminServicesTabFieldsUpdate($params, array("PublishName"=>$return['serverData']['unique_id']));
+				}else{
+					mediacp_AdminServicesTabFieldsUpdate($params, array("ServiceID"=>'0'));
+				}
+
 			}
 
 		}
 
-	}
+		function mediacp_DetectUpgradeDatabase(){
 
-	function mediacp_DetectUpgradeDatabase(){
-
-		$selectTBLPRODUCTS = full_query("SELECT * FROM tblproducts WHERE servertype='mediacp'");
-		if ( mysql_num_rows($selectTBLPRODUCTS) > 1 ){
-			$params = mysql_fetch_assoc($selectTBLPRODUCTS);
+			$selectTBLPRODUCTS = full_query("SELECT * FROM tblproducts WHERE servertype='mediacp'");
+			if ( mysql_num_rows($selectTBLPRODUCTS) > 1 ){
+				$params = mysql_fetch_assoc($selectTBLPRODUCTS);
 
 			# Detect if old module currently installed, migrate fields to new format
-			if (
+				if (
 					strpos($params['configoption2'], 'http') !== FALSE &&
 					($params['configoption18']=='Email' || $params['configoption18']=='WHMCS') &&
 					($params['configoption19']=='disabled' || $params['configoption19']=='enabled') &&
 					($params['configoption14']=='disabled' || $params['configoption14']=='enabled')
-			){
-				full_query("UPDATE tblproducts SET configoption8='Shoutcast Transcoder V1' WHERE configoption8='sctransv1' AND servertype='mediacp';");echo mysql_error();
-				full_query("UPDATE tblproducts SET configoption8='Shoutcast Transcoder V2' WHERE configoption8='sctransv2' AND servertype='mediacp';");echo mysql_error();
-				full_query("UPDATE tblproducts SET configoption8='Ices 0.4 (MP3)' WHERE configoption8='ices04' AND servertype='mediacp';");echo mysql_error();
-				full_query("UPDATE tblproducts SET configoption8='Ices 2.0 (OGG)' WHERE configoption8='ices20' AND servertype='mediacp';");echo mysql_error();
-				full_query("UPDATE tblproducts SET configoption8='Stream Transcoder V3' WHERE configoption8='streamtranscoderv3' AND servertype='mediacp';");echo mysql_error();
-				full_query("UPDATE tblproducts SET
-								configoption10=configoption3,
-								configoption11=configoption8,
-								configoption12=configoption5,
-								configoption13=configoption4,
-								configoption14=configoption6,
-								configoption15=configoption7,
-								configoption16=configoption9,
-								configoption17=configoption15
-							WHERE
-								servertype='mediacp'");
-				full_query("UPDATE tblproducts SET
-								configoption1=configoption10,
-								configoption2=configoption11,
-								configoption3=configoption12,
-								configoption7=configoption13,
-								configoption4=configoption14,
-								configoption5=configoption15,
-								configoption6=configoption16,
-								configoption8='Email',
-								configoption9=configoption17,
-								configoption10='',	configoption11='',configoption12='',configoption13='',configoption14='',configoption15='',configoption16='',configoption17='',configoption18='',configoption19='',
-								configoption20='',configoption21='',configoption22='',configoption23='',configoption24=''
-							WHERE
-								servertype='mediacp';");
-								echo mysql_error();
+				){
+					full_query("UPDATE tblproducts SET configoption8='Shoutcast Transcoder V1' WHERE configoption8='sctransv1' AND servertype='mediacp';");echo mysql_error();
+					full_query("UPDATE tblproducts SET configoption8='Shoutcast Transcoder V2' WHERE configoption8='sctransv2' AND servertype='mediacp';");echo mysql_error();
+					full_query("UPDATE tblproducts SET configoption8='Ices 0.4 (MP3)' WHERE configoption8='ices04' AND servertype='mediacp';");echo mysql_error();
+					full_query("UPDATE tblproducts SET configoption8='Ices 2.0 (OGG)' WHERE configoption8='ices20' AND servertype='mediacp';");echo mysql_error();
+					full_query("UPDATE tblproducts SET configoption8='Stream Transcoder V3' WHERE configoption8='streamtranscoderv3' AND servertype='mediacp';");echo mysql_error();
+					full_query("UPDATE tblproducts SET
+						configoption10=configoption3,
+						configoption11=configoption8,
+						configoption12=configoption5,
+						configoption13=configoption4,
+						configoption14=configoption6,
+						configoption15=configoption7,
+						configoption16=configoption9,
+						configoption17=configoption15
+						WHERE
+						servertype='mediacp'");
+					full_query("UPDATE tblproducts SET
+						configoption1=configoption10,
+						configoption2=configoption11,
+						configoption3=configoption12,
+						configoption7=configoption13,
+						configoption4=configoption14,
+						configoption5=configoption15,
+						configoption6=configoption16,
+						configoption8='Email',
+						configoption9=configoption17,
+						configoption10='',	configoption11='',configoption12='',configoption13='',configoption14='',configoption15='',configoption16='',configoption17='',configoption18='',configoption19='',
+						configoption20='',configoption21='',configoption22='',configoption23='',configoption24=''
+						WHERE
+						servertype='mediacp';");
+					echo mysql_error();
 
-				mediacp_checkTableCreation();
+					mediacp_checkTableCreation();
 
-				/** Migrate Passwords from existing accounts **/
-				full_query("INSERT INTO `whmcs_mediacp` (customer_id, sharedpassword)
-								SELECT customer_id, reference FROM whmcs_castcontrol
-								WHERE NOT EXISTS
-									(SELECT 1 FROM whmcs_mediacp as T2 WHERE whmcs_castcontrol.customer_id = T2.customer_id)");
+					/** Migrate Passwords from existing accounts **/
+					full_query("INSERT INTO `whmcs_mediacp` (customer_id, sharedpassword)
+						SELECT customer_id, reference FROM whmcs_castcontrol
+						WHERE NOT EXISTS
+						(SELECT 1 FROM whmcs_mediacp as T2 WHERE whmcs_castcontrol.customer_id = T2.customer_id)");
 
+				}
+			}
+
+		}
+
+		function mediacp_checkTableCreation() {
+
+			$result = full_query("show tables like 'whmcs_mediacp'");
+			if ( mysql_num_rows($result)==0 ){
+
+				$sql = ("CREATE TABLE IF NOT EXISTS `whmcs_mediacp` (".
+					"  `customer_id` int(11) NOT NULL,".
+					"  `sharedpassword` varchar(50) NOT NULL,".
+					"  PRIMARY KEY  (`customer_id`)".
+					") CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+				full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
+
+			}
+
+			$result = full_query("show tables like 'mod_mediacp_fields'");
+			if ( mysql_num_rows($result)==0 ){
+
+				$sql = ("CREATE TABLE IF NOT EXISTS `mod_mediacp_fields` (".
+					"  `service_id` int(11) NOT NULL,".
+					"  `CustomerID` int(6) NOT NULL,".
+					"  `ServiceID` int(6) NOT NULL,".
+					"  `PublishName` varchar(100) NOT NULL,".
+					"  `ServiceLink` TEXT NOT NULL,".
+					"  `RTMP` TEXT NOT NULL,".
+					"  `RTSP` TEXT NOT NULL,".
+					"  PRIMARY KEY  (`service_id`)".
+					") CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+				full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
+
+			}
+
+		# Check and upgrade collation
+			$result = full_query("SELECT TABLE_COLLATION FROM information_schema.TABLES WHERE TABLE_NAME = 'mod_mediacp_fields' AND TABLE_COLLATION = 'utf8mb4_unicode_ci'");
+			if ( mysql_num_rows($result)==0 ) {
+				full_query("ALTER TABLE mod_mediacp_fields CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 			}
 		}
 
-	}
+		function mediacp_getClientPassword($customer_id){
 
-	function mediacp_checkTableCreation() {
+			mediacp_checkTableCreation();
 
-		$result = full_query("show tables like 'whmcs_mediacp'");
-		if ( mysql_num_rows($result)==0 ){
-
-			$sql = ("CREATE TABLE IF NOT EXISTS `whmcs_mediacp` (".
-						"  `customer_id` int(11) NOT NULL,".
-						"  `sharedpassword` varchar(50) NOT NULL,".
-						"  PRIMARY KEY  (`customer_id`)".
-					") CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-			full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
-
-		}
-
-		$result = full_query("show tables like 'mod_mediacp_fields'");
-		if ( mysql_num_rows($result)==0 ){
-
-			$sql = ("CREATE TABLE IF NOT EXISTS `mod_mediacp_fields` (".
-						"  `service_id` int(11) NOT NULL,".
-						"  `CustomerID` int(6) NOT NULL,".
-						"  `ServiceID` int(6) NOT NULL,".
-						"  `PublishName` varchar(100) NOT NULL,".
-						"  `ServiceLink` TEXT NOT NULL,".
-						"  `RTMP` TEXT NOT NULL,".
-						"  `RTSP` TEXT NOT NULL,".
-						"  PRIMARY KEY  (`service_id`)".
-					") CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-			full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
-
-		}
-
-		# Check and upgrade collation
-        $result = full_query("SELECT TABLE_COLLATION FROM information_schema.TABLES WHERE TABLE_NAME = 'mod_mediacp_fields' AND TABLE_COLLATION = 'utf8mb4_unicode_ci'");
-        if ( mysql_num_rows($result)==0 ) {
-            full_query("ALTER TABLE mod_mediacp_fields CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-        }
-	}
-
-	function mediacp_getClientPassword($customer_id){
-
-		mediacp_checkTableCreation();
-
-		if (!is_numeric($customer_id)) return false;
-
-		$selectPassword = full_query("SELECT sharedpassword FROM whmcs_mediacp WHERE customer_id=".$customer_id);
-		if ( mysql_num_rows($selectPassword) == 0 ){
-			$sql = ("INSERT INTO whmcs_mediacp (customer_id, sharedpassword) VALUES({$customer_id}, '".mysql_real_escape_string(encrypt(mediacp_generatePassword()))."')");
-			full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
+			if (!is_numeric($customer_id)) return false;
 
 			$selectPassword = full_query("SELECT sharedpassword FROM whmcs_mediacp WHERE customer_id=".$customer_id);
-		}
-		$results = mysql_fetch_array($selectPassword);
-		return decrypt($results['sharedpassword']);
-	}
+			if ( mysql_num_rows($selectPassword) == 0 ){
+				$sql = ("INSERT INTO whmcs_mediacp (customer_id, sharedpassword) VALUES({$customer_id}, '".mysql_real_escape_string(encrypt(mediacp_generatePassword()))."')");
+					full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
 
-	function mediacp_updateClientPassword($customer_id, $password){
-		$sql = ("UPDATE whmcs_mediacp SET sharedpassword='".mysql_real_escape_string(encrypt($password))."'");
-		full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
-	}
+					$selectPassword = full_query("SELECT sharedpassword FROM whmcs_mediacp WHERE customer_id=".$customer_id);
+				}
+				$results = mysql_fetch_array($selectPassword);
+				return decrypt($results['sharedpassword']);
+			}
 
-	function mediacp_get_panel_url($params){
+			function mediacp_updateClientPassword($customer_id, $password){
+				$sql = ("UPDATE whmcs_mediacp SET sharedpassword='".mysql_real_escape_string(encrypt($password))."'");
+				full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
+			}
 
-		$hostname = $params['serverhostname'];
-		$port = $params['serverport'];
-		$ssl = $params['serversecure'];
+			function mediacp_get_panel_url($params){
 
-		return [
-			'hostname' => $hostname,
-			'port' => $port,
-			'ssl' => $ssl,
-			'url' => ($ssl?'https://':'http://') . $hostname . ':' . $port,
-		];
-	}
+				$hostname = $params['serverhostname'];
+				$port = $params['serverport'];
+				$ssl = $params['serversecure'];
 
-    function mediacp_ListAccounts(array $params)
-    {
-        $accounts = [];
-        try {
+				return [
+					'hostname' => $hostname,
+					'port' => $port,
+					'ssl' => $ssl,
+					'url' => ($ssl?'https://':'http://') . $hostname . ':' . $port,
+				];
+			}
 
-            $serverid = $params['serverid'];
-            $serverhostname = $params['serverhostname'];
-            $serverip = $params['serverip'];
-            $serverusername = $params['serverusername'];
-            $serverpassword = $params['serverpassword'];
-            $serveraccesshash = $params['serveraccesshash'];
-            $serversecure = $params['serversecure'];
+			function mediacp_ListAccounts(array $params)
+			{
+				$accounts = [];
+				try {
+
+					$serverid = $params['serverid'];
+					$serverhostname = $params['serverhostname'];
+					$serverip = $params['serverip'];
+					$serverusername = $params['serverusername'];
+					$serverpassword = $params['serverpassword'];
+					$serveraccesshash = $params['serveraccesshash'];
+					$serversecure = $params['serversecure'];
 
             # Run connection to retrieve usage for all domains/accounts on $serverid
-            $api = array(
-                "path"		=> $params['serverhostname'],
-                "rpc"		=> "admin.service_list",
-                "args"		=> array("auth"			=> $params['serveraccesshash'])
-            );
-            $return = mediacp_api( $api, $params );
+					$api = array(
+						"path"		=> $params['serverhostname'],
+						"rpc"		=> "admin.service_list",
+						"args"		=> array("auth"			=> $params['serveraccesshash'])
+					);
+					$return = mediacp_api( $api, $params );
 
-            if ( @$return['status'] == 'failed' && strpos(@$return['error'],'requested method admin.service_list does not exist') !== FALSE ){
-                return [
+					if ( @$return['status'] == 'failed' && strpos(@$return['error'],'requested method admin.service_list does not exist') !== FALSE ){
+						return [
                     'success'  => false, // Boolean value
                     'error' => "Not supported with your version of MediaCP. Please upgrade MediaCP to version 2.9.11, 2.10.7 or newer.",
                 ];
             }
 
             if ( isset($return['status']) && isset($return['error']) ){
-                return ['success'=>false,'error'=>$return['error']];
+            	return ['success'=>false,'error'=>$return['error']];
             }
 
             if ( @$return['status'] !== 'success' ){
-                return 'ERROR: '.print_r($return,true);
+            	return 'ERROR: '.print_r($return,true);
             }
 
             // Call the remote api to obtain the list of accounts. Use the values provided by
@@ -1419,26 +1419,26 @@
 
             foreach ($return['data'] as $account) {
                 #var_dump($account);exit;
-                $accounts[] = [
+            	$accounts[] = [
                     // The remote accounts email address
-                    'email' => $account['user']['user_email'],
+            		'email' => $account['user']['user_email'],
                     // The remote accounts username
-                    'username' => $account['user']['username'],
+            		'username' => $account['user']['username'],
                     // The remote accounts primary domain name
-                    'domain' => "{$params['serverhostname']}:{$account['portbase']}",
+            		'domain' => "{$params['serverhostname']}:{$account['portbase']}",
                     // This can be one of the above fields or something different.
                     // In this example, the unique identifier is the domain name
                     //'uniqueIdentifier' => "{$account['slug']}",
-                    'uniqueIdentifier' => "{$params['serverhostname']}:{$account['portbase']}",
+            		'uniqueIdentifier' => "{$params['serverhostname']}:{$account['portbase']}",
                     // The accounts package on the remote server
-                    'product' => "default",
+            		'product' => "default",
                     // The remote accounts primary IP Address
-                    'primaryip' => '1.2.3.4',
+            		'primaryip' => '1.2.3.4',
                     // The remote accounts creation date (Format: Y-m-d H:i:s)
-                    'created' => date("Y-m-d H:i:s"),
+            		'created' => date("Y-m-d H:i:s"),
                     // The remote accounts status (Status::ACTIVE or Status::SUSPENDED)
-                    'status' => 'Active',
-                ];
+            		'status' => 'Active',
+            	];
             }
             #var_dump($accounts);exit;
             // When returning the accounts, ensure that you return a success as a boolean
@@ -1448,47 +1448,47 @@
                 'accounts' => $accounts,
             ];
         } catch (Exception $e) {
-            return [
+        	return [
                 'success'  => false, // Boolean value
                 'error' => $e->getMessage(),
             ];
         }
     }
 
-	function mediacp_api( $api, $params )	{
+    function mediacp_api( $api, $params )	{
 
-		$panelUrl = mediacp_get_panel_url($params);
+    	$panelUrl = mediacp_get_panel_url($params);
 
 
 		# RECORD PREREQUEST
-		logModuleCall('mediacp_'.date("Ymd", filemtime(__FILE__)),$api['rpc'].'_prerequest',$api,'','');
+    	logModuleCall('mediacp_'.date("Ymd", filemtime(__FILE__)),$api['rpc'].'_prerequest',$api,'','');
 
 		# CHECK API KEY IS ENTERED CORRECTLY
-		if ( strlen($api['args']['auth']) < 24 ) {
-			logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'] . '_apicheck',$api, '', "The provided API key for the server is not valid",'');
-			return array('status'=>'failed', 'error'=>"The provided API key for the server is not valid. Refer to https://www.mediacp.net/documentation/whmcs-integration-guide/");
-		}
+    	if ( strlen($api['args']['auth']) < 24 ) {
+    		logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'] . '_apicheck',$api, '', "The provided API key for the server is not valid",'');
+    		return array('status'=>'failed', 'error'=>"The provided API key for the server is not valid. Refer to https://www.mediacp.net/documentation/whmcs-integration-guide/");
+    	}
 
 		# SSL Support
-		$method = $panelUrl['ssl'] ? "IXR_ClientSSL" : "IXR_Client";
+    	$method = $panelUrl['ssl'] ? "IXR_ClientSSL" : "IXR_Client";
 
-		$client = new $method($panelUrl['hostname'],'/system/rpc.php',$panelUrl['port'],10);
-		$SubmitRequest = $client->query($api['rpc'], $api['args']);
+    	$client = new $method($panelUrl['hostname'],'/system/rpc.php',$panelUrl['port'],10);
+    	$SubmitRequest = $client->query($api['rpc'], $api['args']);
 
 		# Debugging
-		if ( !$SubmitRequest ) {
-			if ( $client->getErrorMessage() == 'transport error - HTTP status was redirect' ){
-				logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), "There is a license issue with your MediaCP license at this address of {$api['path']}",'');
-				return array('status'=>'failed', 'error'=>"There is a license issue with your MediaCP license at this address of {$api['path']}");
-			}
-			$errorcode = $client->getErrorCode();
-			$errormessage = $client->getErrorMessage();
-			logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), $errorcode.':'.$errormessage);
-			return array('status'=>'failed', 'error'=>$errormessage);
-		}
+    	if ( !$SubmitRequest ) {
+    		if ( $client->getErrorMessage() == 'transport error - HTTP status was redirect' ){
+    			logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), "There is a license issue with your MediaCP license at this address of {$api['path']}",'');
+    			return array('status'=>'failed', 'error'=>"There is a license issue with your MediaCP license at this address of {$api['path']}");
+    		}
+    		$errorcode = $client->getErrorCode();
+    		$errormessage = $client->getErrorMessage();
+    		logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), $errorcode.':'.$errormessage);
+    		return array('status'=>'failed', 'error'=>$errormessage);
+    	}
 
-		$response = $client->getResponse();
-		logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), $response, $client->debugContents);
+    	$response = $client->getResponse();
+    	logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), $response, $client->debugContents);
 
-		return $response;
-	}
+    	return $response;
+    }
