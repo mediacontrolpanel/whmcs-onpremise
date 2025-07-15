@@ -44,7 +44,17 @@ if ( !class_exists("IXR_Value") ){
 				"FriendlyName" => "Media Service",
 				"Type" => "dropdown",
 				"Size" => "28",
-				"Options" => "Shoutcast 2,Shoutcast 198,Icecast 2,Icecast 2 KH,Wowza Streaming Engine,Flussonic,NginxRtmp,Audio Transcoder",
+				"Options" => [
+					"Shoutcast 2" => "Shoutcst 2",
+					"Shoutcast 198" => "Shoutcast 198",
+					"Icecast 2" => "Icecast 2",
+					"Icecast 2 KH" => "Icecast 2 KH",
+					"NginxRtmp" => "MCP Video",
+					"Wowza Streaming Engine" => "Wowza Streaming Engine",
+					"Flussonic" => "Flussonic",
+					"Audio Transcoder" => "Audio Transcoder",
+				],
+				"Shoutcast 2,Shoutcast 198,Icecast 2,Icecast 2 KH,Wowza Streaming Engine,Flussonic,NginxRtmp,Audio Transcoder",
 				"Description" => "",
 				"Default" => "Shoutcast 2",
 				'SimpleMode' => true,
@@ -851,6 +861,9 @@ if ( !class_exists("IXR_Value") ){
 				$args['plugin'] = 'Flussonic';
 				break;
 				case 'NginxRtmp':
+				case 'MCP Video':
+				case 'Video Streaming':
+				case 'Video':
 				$args['plugin'] = 'NginxRtmp';
 				break;
 
