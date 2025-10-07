@@ -7,7 +7,7 @@ if ( !class_exists("IXR_Value") ){
 	include_once('IXR_Library.php');
 }
 
-c
+
 	/**
 	 * Define module related meta data.
 	 *
@@ -313,7 +313,20 @@ c
 		$Config = mediacp_GetConfiguration($params);
 		$ServiceData = mediacp_AdminServicesTabFieldsGet($params);
 
-		# Terminate Reseller Account
+        # Handle Reseller Account Termination
+        if ( !empty($Config['resellerplan']) && is_numeric($Config['resellerplan']) ){
+            $return = mediacp_api(array(
+                "path"		=> $params['serverhostname'],
+                "rpc"		=> "admin.user_remove",
+                "args"		=> array(
+                    "auth"			=> $params['serveraccesshash'],
+                    "userid"	=> $ServiceData['CustomerID'],
+                )
+            ), $params );
+            if ( $return['status'] != 'success' && $return['error'] != 'Could not locate service' ){
+                return $return['error'];
+            }
+        }
 
 		# Delete Media Service
 		if ( !empty($ServiceData['ServiceID']) ){
