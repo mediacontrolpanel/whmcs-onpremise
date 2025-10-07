@@ -7,7 +7,7 @@ if ( !class_exists("IXR_Value") ){
 	include_once('IXR_Library.php');
 }
 
-
+c
 	/**
 	 * Define module related meta data.
 	 *
@@ -1123,6 +1123,9 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 			if ( isset($params['customfields']['IPCAM URL']) )			$args['customfields']['shoutcast_address'] = $params['customfields']['IPCAM URL'];
 			if ( isset($params['customfields']['IPCAM Address']) )		$args['customfields']['shoutcast_address'] = $params['customfields']['IPCAM Address'];
 
+			# Audio Processing
+			if ( isset($configoptions['Audio Processor']) )		$args['customfields']['audio_processor'] = $configoptions['Audio Processor'];
+			if ( isset($configoptions['Audio Processor Profile']) )	$args['customfields']['audio_processor_profile'] = $configoptions['Audio Processor Profile'];
 
 			return $args;
 		}
