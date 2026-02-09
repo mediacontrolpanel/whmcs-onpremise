@@ -1073,9 +1073,7 @@ if ( !class_exists("IXR_Value") ){
 	}
 	if ( 	$args['plugin'] == 'NginxRtmp' &&
 		isset($args['customfields']['servicetype']) &&
-		$args['customfields']['servicetype'] != 'Live Streaming' &&
-		$args['customfields']['servicetype'] != 'TV Station' &&
-		$args['customfields']['servicetype'] != 'Relay'
+		!in_array($args['customfields']['servicetype'], ['Live Streaming', 'TV Station', 'Relay', 'Ondemand Streaming'])
 	){
 		$args['customfields']['servicetype'] = 'Live Streaming';
 }
