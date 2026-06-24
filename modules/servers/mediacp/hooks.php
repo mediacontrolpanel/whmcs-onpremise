@@ -160,10 +160,11 @@ add_hook('EmailPreSend', 1, function($vars) {
 
 	$service = Service::with('product')->find($vars['relid']);
 
-	if ( $service->product->servertype == 'mediacp' ){
+	if ( $service && $service->product && $service->product->servertype == 'mediacp' ){
 
-		$result = select_query("mod_mediacp_fields","",array("service_id"=>$vars['relid']));
-		$data = mysql_fetch_array($result);
+		$data = (array) Capsule::table('mod_mediacp_fields')
+			->where('service_id', $vars['relid'])
+			->first();
 
 		$merge_fields = [
 			'mediacp_panel_url' => ($service->serverModel->secure=='on'?'https://':'http://') . $service->serverModel->hostname . ':' . ($service->serverModel->port?$service->serverModel->port:2020)
@@ -171,8 +172,8 @@ add_hook('EmailPreSend', 1, function($vars) {
 
 		list($merge_fields['mediacp_host_address'],$merge_fields['mediacp_portbase']) = explode(':',$service->domain);
 //PublishName
-		$merge_fields['mediacp_publish_name'] = $data['PublishName'];
-		$merge_fields['slug'] = mcp_str_slug($data['PublishName']);
+		$merge_fields['mediacp_publish_name'] = $data['PublishName'] ?? '';
+		$merge_fields['mediacp_slug'] = mcp_str_slug($data['PublishName'] ?? '');
 
 		return $merge_fields;
 	}
