@@ -4,11 +4,11 @@ use PHPUnit\Framework\TestCase;
 
 final class MediaCpModuleTest extends TestCase
 {
-    public function testComposerPhpConstraintTargetsPhp81ThroughPhp85(): void
+    public function testComposerPhpConstraintTargetsPhp74ThroughPhp85(): void
     {
         $composer = json_decode(file_get_contents(__DIR__ . '/../composer.json'), true);
 
-        self::assertSame('>=8.1 <8.6', $composer['require']['php']);
+        self::assertSame('>=7.4 <8.6', $composer['require']['php']);
     }
 
     public function testEnabledOptionRecognizesYesAndOneOnlyWhenPresent(): void
