@@ -1,5 +1,5 @@
 <?php
-use Illuminate\Database\Capsule\Manager as Capsule;
+use WHMCS\Database\Capsule;
 
 
 /** Ensure XMLRPC class is not already included **/
@@ -218,9 +218,12 @@ if ( !class_exists("IXR_Value") ){
 		}
 
 			# Update WHMCS Username & Password Fields
-		full_query("UPDATE tblhosting 	SET	username='".  $username  ."',
-			password='".  encrypt($password)  ."'
-			WHERE id='".$params["accountid"]."'");
+		Capsule::table('tblhosting')
+			->where('id', $params["accountid"])
+			->update([
+				'username' => $username,
+				'password' => encrypt($password),
+			]);
 
 
 
@@ -302,8 +305,12 @@ if ( !class_exists("IXR_Value") ){
 
 		$domain = in_array($api['args']['plugin'], ['WowzaMedia','Flussonic','NginxRtmp']) ? $return['serverData']['unique_id'] : ($params['serverhostname'] .':'. $return['portbase']);
 
-		full_query("UPDATE tblhosting 	SET domain='".  $domain  ."' WHERE id='".$params["accountid"]."'");
-		full_query("UPDATE tblhosting 	SET dedicatedip='".  ($params['serverip'])  ."' WHERE id='".$params["accountid"]."'");
+		Capsule::table('tblhosting')
+			->where('id', $params["accountid"])
+			->update([
+				'domain' => $domain,
+				'dedicatedip' => $params['serverip'],
+			]);
 		return 'success';
 
 	}
@@ -758,12 +765,12 @@ if ( !class_exists("IXR_Value") ){
 
 	function mediacp_AdminServicesTabFieldsGet($params){
 		mediacp_checkTableCreation();
-		$data = (array) Capsule::table('mod_mediacp_fields')->where('service_id',$params['serviceid'])->get()->toArray()[0];
+		$data = (array) Capsule::table('mod_mediacp_fields')->where('service_id',$params['serviceid'])->first();
 
 		return array(
-			"CustomerID" => $data['CustomerID'],
-			"ServiceID" => $data['ServiceID'],
-			"PublishName" => $data['PublishName']
+			"CustomerID" => $data['CustomerID'] ?? 0,
+			"ServiceID" => $data['ServiceID'] ?? 0,
+			"PublishName" => $data['PublishName'] ?? ''
 					//"Service Link" => $data['ServiceLink'],
 					//"RTMP Link"	=> $data['RTMP'],
 					//"RTSP Link" => $data['RTSP']
@@ -808,10 +815,6 @@ if ( !class_exists("IXR_Value") ){
 	/****** MEDIACP FUNCTIONALITY ******/
 
 	function mediacp_ProcessServiceOptions($args, $params){
-
-		$Config = mediacp_GetConfiguration($params);
-		$ServiceData = mediacp_AdminServicesTabFieldsGet($params);
-
 		/*
 			plugin
 			sourceplugin
@@ -822,7 +825,8 @@ if ( !class_exists("IXR_Value") ){
 		*/
 
 			/* CONFIGURABLE OPTIOSN & VALIDATION */
-			$configoptions = $params['configoptions'];
+			$configoptions = $params['configoptions'] ?? [];
+			$customfields = $params['customfields'] ?? [];
 
 			# Plugin / Media Service
 			if ( isset($configoptions['Media Service']) )			$args['plugin'] = $configoptions['Media Service'];
@@ -1050,7 +1054,7 @@ if ( !class_exists("IXR_Value") ){
 			if ( isset($configoptions['Flash Media Service']) )		$args['customfields']['servicetype'] = $configoptions['Flash Media Service'];
 
 			# Flussonic / Wowza Service Type -> Shoutcast Extension
-			if ( $args['customfields']['servicetype'] == 'Shoutcast/Icecast Relay' ) $args['customfields']['servicetype'] = 'Shoutcast';
+			if ( isset($args['customfields']['servicetype']) && $args['customfields']['servicetype'] == 'Shoutcast/Icecast Relay' ) $args['customfields']['servicetype'] = 'Shoutcast';
 
 			if ( 	$args['plugin'] == 'WowzaMedia' &&
 				isset($args['customfields']['servicetype']) &&
@@ -1079,8 +1083,8 @@ if ( !class_exists("IXR_Value") ){
 }
 
 			# Wowza VHOST Configuration
-if ( isset($params['customfields']['Wowza VHost']) ){
-	$args['customfields']['vhost'] = trim($params['customfields']['Wowza VHost']);
+if ( isset($customfields['Wowza VHost']) ){
+	$args['customfields']['vhost'] = trim($customfields['Wowza VHost']);
 }
 
 
@@ -1112,14 +1116,14 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 			 * Stream Targets
 			 */
 			$streamTargets = [];
-			if ( isset($configoptions['Stream Publishing']) && strtolower($configoptions['Stream Publishing'])=='yes'||$configoptions['Stream Publishing']==1 )		$streamTargets = ['Facebook','Youtube','Twitch','Periscope','Icecast','Shoutcast','RTMP'];
-			if ( isset($configoptions['Facebook Publishing']) && strtolower($configoptions['Facebook Publishing'])=='yes'||$configoptions['Facebook Publishing']==1 )		$streamTargets[] = 'Facebook';
-			if ( isset($configoptions['Icecast Publishing']) && strtolower($configoptions['Icecast Publishing'])=='yes'||$configoptions['Icecast Publishing']==1 )		$streamTargets[] = 'Icecast';
-			if ( isset($configoptions['Shoutcast Publishing']) && strtolower($configoptions['Shoutcast Publishing'])=='yes'||$configoptions['Shoutcast Publishing']==1 )		$streamTargets[] = 'Shoutcast';
-			if ( isset($configoptions['Periscope Publishing']) && strtolower($configoptions['Periscope Publishing'])=='yes'||$configoptions['Periscope Publishing']==1 )		$streamTargets[] = 'Periscope';
-			if ( isset($configoptions['Twitch Publishing']) && strtolower($configoptions['Twitch Publishing'])=='yes'||$configoptions['Twitch Publishing']==1 )		$streamTargets[] = 'Twitch';
-			if ( isset($configoptions['Youtube Publishing']) && strtolower($configoptions['Youtube Publishing'])=='yes'||$configoptions['Youtube Publishing']==1 )		$streamTargets[] = 'Youtube';
-			if ( isset($configoptions['RTMP Publishing']) && strtolower($configoptions['RTMP Publishing'])=='yes'||$configoptions['RTMP Publishing']==1 )		$streamTargets[] = 'RTMP';
+			if ( mediacp_isEnabledOption($configoptions, 'Stream Publishing') )		$streamTargets = ['Facebook','Youtube','Twitch','Periscope','Icecast','Shoutcast','RTMP'];
+			if ( mediacp_isEnabledOption($configoptions, 'Facebook Publishing') )		$streamTargets[] = 'Facebook';
+			if ( mediacp_isEnabledOption($configoptions, 'Icecast Publishing') )		$streamTargets[] = 'Icecast';
+			if ( mediacp_isEnabledOption($configoptions, 'Shoutcast Publishing') )		$streamTargets[] = 'Shoutcast';
+			if ( mediacp_isEnabledOption($configoptions, 'Periscope Publishing') )		$streamTargets[] = 'Periscope';
+			if ( mediacp_isEnabledOption($configoptions, 'Twitch Publishing') )		$streamTargets[] = 'Twitch';
+			if ( mediacp_isEnabledOption($configoptions, 'Youtube Publishing') )		$streamTargets[] = 'Youtube';
+			if ( mediacp_isEnabledOption($configoptions, 'RTMP Publishing') )		$streamTargets[] = 'RTMP';
 			if ( count($streamTargets) > 0 ) $args['customfields']['streamtargets'] = $streamTargets;
 
 			if ( isset($configoptions['Stream Targets']) )			$args['customfields']['stream_targets_limit'] = (int) $configoptions['Stream Targets'];
@@ -1134,18 +1138,18 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 			/** CUSTOM FIELDS **/
 
 			# Publish Name
-			if ( isset($params['customfields']['Publish Name']) )	$args['unique_id'] = $params['customfields']['Publish Name'];
+			if ( isset($customfields['Publish Name']) )	$args['unique_id'] = $customfields['Publish Name'];
 
 			# Wowza -> Shoutcast Stream Name
-			if ( isset($params['customfields']['Shoutcast Stream Name']) )		$args['customfields']['shoutcast_streamname'] = $params['customfields']['Shoutcast Stream Name'];
-			if ( isset($params['customfields']['Stream Name']) )				$args['customfields']['shoutcast_streamname'] = $params['customfields']['Stream name'];
+			if ( isset($customfields['Shoutcast Stream Name']) )		$args['customfields']['shoutcast_streamname'] = $customfields['Shoutcast Stream Name'];
+			if ( isset($customfields['Stream Name']) )				$args['customfields']['shoutcast_streamname'] = $customfields['Stream Name'];
 
 			# Wowza -> Restream URL / IPCAM / Shoutcast RESTREAM
-			if ( isset($params['customfields']['Shoutcast URL']) )		$args['customfields']['shoutcast_address'] = $params['customfields']['Shoutcast URL'];
-			if ( isset($params['customfields']['Icecast URL']) )		$args['customfields']['shoutcast_address'] = $params['customfields']['Icecast URL'];
-			if ( isset($params['customfields']['Restream Address']) )	$args['customfields']['shoutcast_address'] = $params['customfields']['Restream Address'];
-			if ( isset($params['customfields']['IPCAM URL']) )			$args['customfields']['shoutcast_address'] = $params['customfields']['IPCAM URL'];
-			if ( isset($params['customfields']['IPCAM Address']) )		$args['customfields']['shoutcast_address'] = $params['customfields']['IPCAM Address'];
+			if ( isset($customfields['Shoutcast URL']) )		$args['customfields']['shoutcast_address'] = $customfields['Shoutcast URL'];
+			if ( isset($customfields['Icecast URL']) )		$args['customfields']['shoutcast_address'] = $customfields['Icecast URL'];
+			if ( isset($customfields['Restream Address']) )	$args['customfields']['shoutcast_address'] = $customfields['Restream Address'];
+			if ( isset($customfields['IPCAM URL']) )			$args['customfields']['shoutcast_address'] = $customfields['IPCAM URL'];
+			if ( isset($customfields['IPCAM Address']) )		$args['customfields']['shoutcast_address'] = $customfields['IPCAM Address'];
 
 			# Audio Processing
 			if ( isset($configoptions['Audio Processor']) )		$args['customfields']['audio_processor'] = $configoptions['Audio Processor'];
@@ -1154,11 +1158,17 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 			return $args;
 		}
 
+		function mediacp_isEnabledOption(array $configoptions, $key){
+			if ( !array_key_exists($key, $configoptions) ) return false;
+			$value = $configoptions[$key];
+			return strtolower((string) $value) == 'yes' || (string) $value == '1';
+		}
+
 		function mediacp_ConvertUnitsToMegabyte( $value ){
 			if ( empty($value) ) return 0;
 			if ( strtolower(trim($value)) == 'unlimited' ) return 999999;
 
-			$numeric = preg_replace("/[^0-9]/i",'', $value);
+			$numeric = (int) preg_replace("/[^0-9]/i",'', $value);
 			$unit = strtolower( trim( preg_replace("/[^a-z]/i",'', $value) ) );
 
 			switch($unit){
@@ -1274,23 +1284,23 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 
 		function mediacp_DetectUpgradeDatabase(){
 
-			$selectTBLPRODUCTS = full_query("SELECT * FROM tblproducts WHERE servertype='mediacp'");
-			if ( mysql_num_rows($selectTBLPRODUCTS) > 1 ){
-				$params = mysql_fetch_assoc($selectTBLPRODUCTS);
+			$products = Capsule::table('tblproducts')->where('servertype', 'mediacp');
+			if ( $products->count() > 1 ){
+				$params = (array) $products->first();
 
 			# Detect if old module currently installed, migrate fields to new format
 				if (
-					strpos($params['configoption2'], 'http') !== FALSE &&
-					($params['configoption18']=='Email' || $params['configoption18']=='WHMCS') &&
-					($params['configoption19']=='disabled' || $params['configoption19']=='enabled') &&
-					($params['configoption14']=='disabled' || $params['configoption14']=='enabled')
+					strpos($params['configoption2'] ?? '', 'http') !== FALSE &&
+					($params['configoption18'] == 'Email' || $params['configoption18'] == 'WHMCS') &&
+					($params['configoption19'] == 'disabled' || $params['configoption19'] == 'enabled') &&
+					($params['configoption14'] == 'disabled' || $params['configoption14'] == 'enabled')
 				){
-					full_query("UPDATE tblproducts SET configoption8='Shoutcast Transcoder V1' WHERE configoption8='sctransv1' AND servertype='mediacp';");echo mysql_error();
-					full_query("UPDATE tblproducts SET configoption8='Shoutcast Transcoder V2' WHERE configoption8='sctransv2' AND servertype='mediacp';");echo mysql_error();
-					full_query("UPDATE tblproducts SET configoption8='Ices 0.4 (MP3)' WHERE configoption8='ices04' AND servertype='mediacp';");echo mysql_error();
-					full_query("UPDATE tblproducts SET configoption8='Ices 2.0 (OGG)' WHERE configoption8='ices20' AND servertype='mediacp';");echo mysql_error();
-					full_query("UPDATE tblproducts SET configoption8='Stream Transcoder V3' WHERE configoption8='streamtranscoderv3' AND servertype='mediacp';");echo mysql_error();
-					full_query("UPDATE tblproducts SET
+					Capsule::table('tblproducts')->where('servertype', 'mediacp')->where('configoption8', 'sctransv1')->update(['configoption8' => 'Shoutcast Transcoder V1']);
+					Capsule::table('tblproducts')->where('servertype', 'mediacp')->where('configoption8', 'sctransv2')->update(['configoption8' => 'Shoutcast Transcoder V2']);
+					Capsule::table('tblproducts')->where('servertype', 'mediacp')->where('configoption8', 'ices04')->update(['configoption8' => 'Ices 0.4 (MP3)']);
+					Capsule::table('tblproducts')->where('servertype', 'mediacp')->where('configoption8', 'ices20')->update(['configoption8' => 'Ices 2.0 (OGG)']);
+					Capsule::table('tblproducts')->where('servertype', 'mediacp')->where('configoption8', 'streamtranscoderv3')->update(['configoption8' => 'Stream Transcoder V3']);
+					Capsule::statement("UPDATE tblproducts SET
 						configoption10=configoption3,
 						configoption11=configoption8,
 						configoption12=configoption5,
@@ -1301,7 +1311,7 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 						configoption17=configoption15
 						WHERE
 						servertype='mediacp'");
-					full_query("UPDATE tblproducts SET
+					Capsule::statement("UPDATE tblproducts SET
 						configoption1=configoption10,
 						configoption2=configoption11,
 						configoption3=configoption12,
@@ -1314,13 +1324,12 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 						configoption10='',	configoption11='',configoption12='',configoption13='',configoption14='',configoption15='',configoption16='',configoption17='',configoption18='',configoption19='',
 						configoption20='',configoption21='',configoption22='',configoption23='',configoption24=''
 						WHERE
-						servertype='mediacp';");
-					echo mysql_error();
+						servertype='mediacp'");
 
 					mediacp_checkTableCreation();
 
 					/** Migrate Passwords from existing accounts **/
-					full_query("INSERT INTO `whmcs_mediacp` (customer_id, sharedpassword)
+					Capsule::statement("INSERT INTO `whmcs_mediacp` (customer_id, sharedpassword)
 						SELECT customer_id, reference FROM whmcs_castcontrol
 						WHERE NOT EXISTS
 						(SELECT 1 FROM whmcs_mediacp as T2 WHERE whmcs_castcontrol.customer_id = T2.customer_id)");
@@ -1332,39 +1341,35 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 
 		function mediacp_checkTableCreation() {
 
-			$result = full_query("show tables like 'whmcs_mediacp'");
-			if ( mysql_num_rows($result)==0 ){
-
-				$sql = ("CREATE TABLE IF NOT EXISTS `whmcs_mediacp` (".
-					"  `customer_id` int(11) NOT NULL,".
-					"  `sharedpassword` varchar(50) NOT NULL,".
-					"  PRIMARY KEY  (`customer_id`)".
-					") CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-				full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
-
+			if ( !Capsule::schema()->hasTable('whmcs_mediacp') ){
+				Capsule::schema()->create('whmcs_mediacp', function ($table) {
+					$table->integer('customer_id');
+					$table->string('sharedpassword', 50);
+					$table->primary('customer_id');
+				});
 			}
 
-			$result = full_query("show tables like 'mod_mediacp_fields'");
-			if ( mysql_num_rows($result)==0 ){
-
-				$sql = ("CREATE TABLE IF NOT EXISTS `mod_mediacp_fields` (".
-					"  `service_id` int(11) NOT NULL,".
-					"  `CustomerID` int(6) NOT NULL,".
-					"  `ServiceID` int(6) NOT NULL,".
-					"  `PublishName` varchar(100) NOT NULL,".
-					"  `ServiceLink` TEXT NOT NULL,".
-					"  `RTMP` TEXT NOT NULL,".
-					"  `RTSP` TEXT NOT NULL,".
-					"  PRIMARY KEY  (`service_id`)".
-					") CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-				full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
-
+			if ( !Capsule::schema()->hasTable('mod_mediacp_fields') ){
+				Capsule::schema()->create('mod_mediacp_fields', function ($table) {
+					$table->integer('service_id');
+					$table->integer('CustomerID')->default(0);
+					$table->integer('ServiceID')->default(0);
+					$table->string('PublishName', 100)->default('');
+					$table->text('ServiceLink')->nullable();
+					$table->text('RTMP')->nullable();
+					$table->text('RTSP')->nullable();
+					$table->primary('service_id');
+				});
 			}
 
 		# Check and upgrade collation
-			$result = full_query("SELECT TABLE_COLLATION FROM information_schema.TABLES WHERE TABLE_NAME = 'mod_mediacp_fields' AND TABLE_COLLATION = 'utf8mb4_unicode_ci'");
-			if ( mysql_num_rows($result)==0 ) {
-				full_query("ALTER TABLE mod_mediacp_fields CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+			$result = Capsule::table('information_schema.TABLES')
+				->where('TABLE_SCHEMA', Capsule::raw('database()'))
+				->where('TABLE_NAME', 'mod_mediacp_fields')
+				->where('TABLE_COLLATION', 'utf8mb4_unicode_ci')
+				->first();
+			if ( !$result ) {
+				Capsule::statement("ALTER TABLE mod_mediacp_fields CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 			}
 		}
 
@@ -1374,21 +1379,30 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 
 			if (!is_numeric($customer_id)) return false;
 
-			$selectPassword = full_query("SELECT sharedpassword FROM whmcs_mediacp WHERE customer_id=".$customer_id);
-			if ( mysql_num_rows($selectPassword) == 0 ){
-				$sql = ("INSERT INTO whmcs_mediacp (customer_id, sharedpassword) VALUES({$customer_id}, '".mysql_real_escape_string(encrypt(mediacp_generatePassword()))."')");
-					full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
-
-					$selectPassword = full_query("SELECT sharedpassword FROM whmcs_mediacp WHERE customer_id=".$customer_id);
-				}
-				$results = mysql_fetch_array($selectPassword);
-				return decrypt($results['sharedpassword']);
+			$row = Capsule::table('whmcs_mediacp')->where('customer_id', $customer_id)->first();
+			if ( !$row ){
+				Capsule::table('whmcs_mediacp')->insert([
+					'customer_id' => $customer_id,
+					'sharedpassword' => encrypt(mediacp_generatePassword()),
+				]);
+				$row = Capsule::table('whmcs_mediacp')->where('customer_id', $customer_id)->first();
 			}
+			return decrypt($row->sharedpassword);
+		}
 
-			function mediacp_updateClientPassword($customer_id, $password){
-				$sql = ("UPDATE whmcs_mediacp SET sharedpassword='".mysql_real_escape_string(encrypt($password))."'");
-				full_query($sql);if ( $error = mysql_error() )	echo $sql.'::'.mysql_error();
+		function mediacp_updateClientPassword($customer_id, $password){
+			if (!is_numeric($customer_id)) return false;
+			$existing = Capsule::table('whmcs_mediacp')->where('customer_id', $customer_id);
+			if ( $existing->count() == 0 ){
+				Capsule::table('whmcs_mediacp')->insert([
+					'customer_id' => $customer_id,
+					'sharedpassword' => encrypt($password),
+				]);
+				return true;
 			}
+			$existing->update(['sharedpassword' => encrypt($password)]);
+			return true;
+		}
 
 			function mediacp_get_panel_url($params){
 
@@ -1515,7 +1529,7 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
     	}
 
     	$response = $client->getResponse();
-    	logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), $response, $client->debugContents);
+		logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), $response, $client->debugContents ?? '');
 
     	return $response;
     }

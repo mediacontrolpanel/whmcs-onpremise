@@ -236,7 +236,7 @@ class IXR_Message
     function tag_open($parser, $tag, $attr)
     {
         $this->_currentTagContents = '';
-        $this->currentTag = $tag;
+        $this->_currentTag = $tag;
         switch($tag) {
             case 'methodCall':
             case 'methodResponse':
@@ -597,6 +597,8 @@ class IXR_Client
     var $message = false;
     var $debug = false;
     var $timeout;
+    var $headers = array();
+    var $debugContents = '';
 
     // Storage place for an error message
     var $error = false;
@@ -634,6 +636,7 @@ class IXR_Client
         $request  = "POST {$this->path} HTTP/1.0$r";
 
         // Merged from WP #8145 - allow custom headers
+        $this->debugContents = '';
         $this->headers['Host']          = $this->server;
         $this->headers['Content-Type']  = 'text/xml';
         $this->headers['User-Agent']    = $this->useragent;
@@ -689,6 +692,7 @@ class IXR_Client
         if ($this->debug) {
             echo '<pre class="ixr_response">'.htmlspecialchars($debugContents)."\n</pre>\n\n";
         }
+        $this->debugContents = $debugContents;
 
         // Now parse what we've got back
         $this->message = new IXR_Message($contents);
@@ -1032,7 +1036,7 @@ class IXR_ClientMulticall extends IXR_Client
 
     function __construct($server, $path = false, $port = 80)
     {
-        parent::IXR_Client($server, $path, $port);
+        parent::__construct($server, $path, $port);
         $this->useragent = 'The Incutio XML-RPC PHP Library (multicall client)';
     }
 
@@ -1302,11 +1306,11 @@ class IXR_ClientSSL extends IXR_Client
 class IXR_ClassServer extends IXR_Server
 {
     var $_objects;
-    var $_delim;
+    var $_delimiter;
 
     function __construct($delim = '.', $wait = false)
     {
-        $this->IXR_Server(array(), false, $wait);
+        parent::__construct(array(), false, $wait);
         $this->_delimiter = $delim;
         $this->_objects = array();
     }
