@@ -29,6 +29,17 @@ final class MediaCpModuleTest extends TestCase
         self::assertEquals(1, mediacp_ConvertUnitsToMegabyte('1024KB'));
     }
 
+    public function testClientDisplayNameEscapesApostrophesForApiPayload(): void
+    {
+        self::assertSame(
+            "Luke O\\'Connor",
+            mediacp_getClientDisplayName([
+                'firstname' => ' Luke ',
+                'lastname' => " O'Connor ",
+            ])
+        );
+    }
+
     public function testProcessServiceOptionsDoesNotReadMissingStreamTargetOptions(): void
     {
         $args = [

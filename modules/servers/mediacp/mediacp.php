@@ -175,6 +175,7 @@ if ( !class_exists("IXR_Value") ){
 
 		$password = empty($Config['usernametype']) || $Config['usernametype'] == 'Shared Client Email' ? mediacp_getClientPassword($params['clientsdetails']['userid']) : trim($params['password']);
 		$hash = SHA1($username . $password);
+		$name = mediacp_getClientDisplayName($params['clientsdetails']);
 
 		$api = array(
 			"rpc"		=> "admin.user_create",
@@ -183,7 +184,7 @@ if ( !class_exists("IXR_Value") ){
 				"username"		=> $username,
 				"hash"			=> $hash,
 				"user_email"	=> trim($params['clientsdetails']['email']),
-				"name"			=> trim($params['clientsdetails']['firstname']) . " " . trim($params['clientsdetails']['lastname']),
+				"name"			=> $name,
 				"contact_number"=> trim($params['clientsdetails']['phonenumber'])
 			)
 		);
@@ -205,7 +206,7 @@ if ( !class_exists("IXR_Value") ){
 					"username"		=> $username,
 					"hash"			=> $hash,
 					"user_email"	=> trim($params['clientsdetails']['email']),
-					"name"			=> trim($params['clientsdetails']['firstname']) . " " . trim($params['clientsdetails']['lastname']),
+					"name"			=> $name,
 					"contact_number"=> trim($params['clientsdetails']['phonenumber']),
 					"reseller_plan" => $Config['resellerplan']
 				]
@@ -1162,6 +1163,11 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 			if ( !array_key_exists($key, $configoptions) ) return false;
 			$value = $configoptions[$key];
 			return strtolower((string) $value) == 'yes' || (string) $value == '1';
+		}
+
+		function mediacp_getClientDisplayName(array $clientsdetails){
+			$name = trim(trim($clientsdetails['firstname'] ?? '') . ' ' . trim($clientsdetails['lastname'] ?? ''));
+			return str_replace("'", "\\'", $name);
 		}
 
 		function mediacp_ConvertUnitsToMegabyte( $value ){
