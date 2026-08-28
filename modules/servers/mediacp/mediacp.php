@@ -151,6 +151,7 @@ if ( !class_exists("IXR_Value") ){
 	}
 
 	function mediacp_CreateAccount($params){
+		mediacp_checkAndUpdateDatabase();
 
 		$Config = mediacp_GetConfiguration($params);
 		$ServiceData = mediacp_AdminServicesTabFieldsGet($params);
@@ -1349,16 +1350,6 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 				});
 			}
 
-			$passwordColumn = Capsule::table('information_schema.COLUMNS')
-				->select('DATA_TYPE')
-				->where('TABLE_SCHEMA', Capsule::raw('database()'))
-				->where('TABLE_NAME', 'whmcs_mediacp')
-				->where('COLUMN_NAME', 'sharedpassword')
-				->first();
-			if ( $passwordColumn && !in_array(strtolower($passwordColumn->DATA_TYPE), ['text', 'mediumtext', 'longtext']) ) {
-				Capsule::statement('ALTER TABLE `whmcs_mediacp` MODIFY `sharedpassword` TEXT NOT NULL');
-			}
-
 			if ( !Capsule::schema()->hasTable('mod_mediacp_fields') ){
 				Capsule::schema()->create('mod_mediacp_fields', function ($table) {
 					$table->integer('service_id');
@@ -1380,6 +1371,20 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 				->first();
 			if ( !$result ) {
 				Capsule::statement("ALTER TABLE mod_mediacp_fields CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+			}
+		}
+
+		function mediacp_checkAndUpdateDatabase() {
+			mediacp_checkTableCreation();
+
+			$passwordColumn = Capsule::table('information_schema.COLUMNS')
+				->select('DATA_TYPE')
+				->where('TABLE_SCHEMA', Capsule::raw('database()'))
+				->where('TABLE_NAME', 'whmcs_mediacp')
+				->where('COLUMN_NAME', 'sharedpassword')
+				->first();
+			if ( $passwordColumn && !in_array(strtolower($passwordColumn->DATA_TYPE), ['text', 'mediumtext', 'longtext']) ) {
+				Capsule::statement('ALTER TABLE `whmcs_mediacp` MODIFY `sharedpassword` TEXT NOT NULL');
 			}
 		}
 
