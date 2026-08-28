@@ -1344,9 +1344,19 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 			if ( !Capsule::schema()->hasTable('whmcs_mediacp') ){
 				Capsule::schema()->create('whmcs_mediacp', function ($table) {
 					$table->integer('customer_id');
-					$table->string('sharedpassword', 50);
+					$table->text('sharedpassword');
 					$table->primary('customer_id');
 				});
+			}
+
+			$passwordColumn = Capsule::table('information_schema.COLUMNS')
+				->select('DATA_TYPE')
+				->where('TABLE_SCHEMA', Capsule::raw('database()'))
+				->where('TABLE_NAME', 'whmcs_mediacp')
+				->where('COLUMN_NAME', 'sharedpassword')
+				->first();
+			if ( $passwordColumn && !in_array(strtolower($passwordColumn->DATA_TYPE), ['text', 'mediumtext', 'longtext']) ) {
+				Capsule::statement('ALTER TABLE `whmcs_mediacp` MODIFY `sharedpassword` TEXT NOT NULL');
 			}
 
 			if ( !Capsule::schema()->hasTable('mod_mediacp_fields') ){
