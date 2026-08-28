@@ -173,7 +173,7 @@ if ( !class_exists("IXR_Value") ){
             trim($params['username'])
         );
 
-		$password = empty($Config['usernametype']) || $Config['usernametype'] == 'Shared Client Email' ? mediacp_getClientPassword($params['clientsdetails']['userid']) : trim($params['password']);
+		$password = empty($Config['usernametype']) || $Config['usernametype'] == 'Shared Client Email' ? mediacp_getClientPassword($params['userid']) : trim($params['password']);
 		$hash = SHA1($username . $password);
 
 		$api = array(
@@ -1387,7 +1387,15 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 				]);
 				$row = Capsule::table('whmcs_mediacp')->where('customer_id', $customer_id)->first();
 			}
-			return decrypt($row->sharedpassword);
+
+			$password = decrypt($row->sharedpassword);
+			if ( $password === '' || $password === false || $password === null ){
+				$password = mediacp_generatePassword();
+				Capsule::table('whmcs_mediacp')
+					->where('customer_id', $customer_id)
+					->update(['sharedpassword' => encrypt($password)]);
+			}
+			return $password;
 		}
 
 		function mediacp_updateClientPassword($customer_id, $password){
