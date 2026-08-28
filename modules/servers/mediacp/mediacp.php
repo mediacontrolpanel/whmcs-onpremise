@@ -151,6 +151,7 @@ if ( !class_exists("IXR_Value") ){
 	}
 
 	function mediacp_CreateAccount($params){
+		mediacp_checkAndUpdateDatabase();
 
 		$Config = mediacp_GetConfiguration($params);
 		$ServiceData = mediacp_AdminServicesTabFieldsGet($params);
@@ -173,7 +174,7 @@ if ( !class_exists("IXR_Value") ){
             trim($params['username'])
         );
 
-		$password = empty($Config['usernametype']) || $Config['usernametype'] == 'Shared Client Email' ? mediacp_getClientPassword($params['clientsdetails']['userid']) : trim($params['password']);
+		$password = empty($Config['usernametype']) || $Config['usernametype'] == 'Shared Client Email' ? mediacp_getClientPassword($params['userid']) : trim($params['password']);
 		$hash = SHA1($username . $password);
 
 		$api = array(
@@ -1344,7 +1345,7 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 			if ( !Capsule::schema()->hasTable('whmcs_mediacp') ){
 				Capsule::schema()->create('whmcs_mediacp', function ($table) {
 					$table->integer('customer_id');
-					$table->string('sharedpassword', 50);
+					$table->text('sharedpassword');
 					$table->primary('customer_id');
 				});
 			}
@@ -1373,6 +1374,20 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 			}
 		}
 
+		function mediacp_checkAndUpdateDatabase() {
+			mediacp_checkTableCreation();
+
+			$passwordColumn = Capsule::table('information_schema.COLUMNS')
+				->select('DATA_TYPE')
+				->where('TABLE_SCHEMA', Capsule::raw('database()'))
+				->where('TABLE_NAME', 'whmcs_mediacp')
+				->where('COLUMN_NAME', 'sharedpassword')
+				->first();
+			if ( $passwordColumn && !in_array(strtolower($passwordColumn->DATA_TYPE), ['text', 'mediumtext', 'longtext']) ) {
+				Capsule::statement('ALTER TABLE `whmcs_mediacp` MODIFY `sharedpassword` TEXT NOT NULL');
+			}
+		}
+
 		function mediacp_getClientPassword($customer_id){
 
 			mediacp_checkTableCreation();
@@ -1387,7 +1402,15 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 				]);
 				$row = Capsule::table('whmcs_mediacp')->where('customer_id', $customer_id)->first();
 			}
-			return decrypt($row->sharedpassword);
+
+			$password = decrypt($row->sharedpassword);
+			if ( $password === '' || $password === false || $password === null ){
+				$password = mediacp_generatePassword();
+				Capsule::table('whmcs_mediacp')
+					->where('customer_id', $customer_id)
+					->update(['sharedpassword' => encrypt($password)]);
+			}
+			return $password;
 		}
 
 		function mediacp_updateClientPassword($customer_id, $password){
