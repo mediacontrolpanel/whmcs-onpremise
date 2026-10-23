@@ -14,6 +14,9 @@ https://www.mediacp.net/documentation/whmcs-integration-guide/
 #######################################################
 CHANGELOG
 #######################################################
+2026-10-23
+ - WHMCS 9.1 compatibility: pass an array as logModuleCall()'s replaceVars argument (WHMCS 9.1 throws a TypeError for a string or null, breaking all module actions and the daily cron)
+
 2022-12-21
  - PHP 8.1 Compatibility
 

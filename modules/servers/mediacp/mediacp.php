@@ -1529,7 +1529,7 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 
 		# CHECK API KEY IS ENTERED CORRECTLY
     	if ( strlen($api['args']['auth']) < 24 ) {
-    		logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'] . '_apicheck',$api, '', "The provided API key for the server is not valid",'');
+    		logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'] . '_apicheck',$api, '', "The provided API key for the server is not valid", array());
     		return array('status'=>'failed', 'error'=>"The provided API key for the server is not valid. Refer to https://www.mediacp.net/documentation/whmcs-integration-guide/");
     	}
 
@@ -1542,7 +1542,7 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
 		# Debugging
     	if ( !$SubmitRequest ) {
     		if ( $client->getErrorMessage() == 'transport error - HTTP status was redirect' ){
-    			logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), "There is a license issue with your MediaCP license at this address of {$api['path']}",'');
+    			logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), "There is a license issue with your MediaCP license at this address of {$api['path']}", array());
     			return array('status'=>'failed', 'error'=>"There is a license issue with your MediaCP license at this address of {$api['path']}");
     		}
     		$errorcode = $client->getErrorCode();
@@ -1552,7 +1552,7 @@ if ( isset($configoptions['RTMP Service']) )			$args['customfields']['rtmpenable
     	}
 
     	$response = $client->getResponse();
-		logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), $response, $client->debugContents ?? '');
+		logModuleCall('mediacp_'.date ("Ymd.", filemtime(__FILE__)),$api['rpc'],$api, var_export($SubmitRequest, true), $response, array());
 
     	return $response;
     }
